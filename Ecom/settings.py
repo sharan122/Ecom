@@ -63,13 +63,12 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
         'APP': {
-            'client_id': '913111114303-2vlf7nj6tj7dug9n7mvtcid527t09bka.apps.googleusercontent.com',
-            'secret': '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',
-            'key': ''
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SECRET'),
+            'key': os.getenv('GOOGLE_KEY')
         }
     }
 }
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

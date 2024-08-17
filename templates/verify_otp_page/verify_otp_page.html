@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncWise Login</title>
+    <link href="{% static 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet '%}">
+    <link href="{% static 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap '%}"
+        rel="stylesheet">
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        body {
+            background-color: #FFF;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .card {
+            border-radius: 10px;
+            border: none;
+            background-color: #FFF;
+        }
+
+        .card img {
+           
+            background: #fff;
+            position: relative;
+           margin-top: 10px;
+            height: 50px;
+            width: 200px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 5PX;
+        }
+
+        .form-control {
+            border-radius: 20px;
+            height: 50px;
+            box-shadow: none;
+            border-color: #dddddd;
+        }
+
+        .btn-primary {
+            border-radius: 20px;
+            background-color: #333333;
+            border: none;
+            height: 50px;
+        }
+
+        .btn-primary:hover {
+            background-color: #555555;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-control::placeholder {
+            color: #bbb;
+            font-weight: 300;
+        }
+
+        .signup-btn {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+        }
+
+        #timer {
+            margin-top: 15px;
+            text-align: center;
+            color: #333333;
+        }
+    </style>
+</head>
+
+<body style="background-color: #36454F;">
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-md-6">
+                <div class="card shadow-sm p-4">
+                    <div class="text-center mb-4">
+                        <img src="{% static 'img/core-img/sync.png'%}" alt="SyncWise Logo" width="100">
+                    </div>
+                    <h3 class="text-center mb-4">NOT A USER?</h3>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                                {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="otp">Enter OTP:</label>
+                            <input type="text" id="otp" name="otp" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block signup-btn">Verify OTP</button>
+                    </form>
+                    <div id="timer"></div>
+                    <button id="resend-btn" onclick="location.href='{% url 'Accounts:resend_otp' %}'" class="btn btn-light signup-btn" disabled>Resend OTP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    var interval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = "Resend OTP in " + minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            clearInterval(interval);
+            document.getElementById('resend-btn').disabled = false;
+            display.textContent = "You can resend the OTP now.";
+        }
+    }, 1000);
+}
+
+       window.onload = function () {
+    // Fetch the expiry time from the backend (make sure it's in ISO format)
+    var otpExpiryTime = new Date("{{ otp_expiry }}").getTime();
+    var currentTime = new Date().getTime();
+    var timeRemaining = Math.floor((otpExpiryTime - currentTime) / 1000);
+
+    
+
+    if (timeRemaining > 0) {
+        startTimer(timeRemaining, document.querySelector('#timer'));
+    } else {
+        document.getElementById('resend-btn').disabled = false;
+        document.querySelector('#timer').textContent = "You can resend the OTP now.";
+    }
+};
+    </script>
+</body>
+
+</html>

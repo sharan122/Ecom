@@ -1,0 +1,118 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+<style>
+    /* Basic styling for the form container */
+    #variantForm {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    /* Styling for form elements */
+    #variantForm label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    #variantForm select,
+    #variantForm input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #variantForm input[type="file"] {
+        padding: 0;
+    }
+
+    /* Styling for the submit button */
+    #submit-button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #submit-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+<div class="container-fluid">
+    <h4 class="page-title">Product Form</h4>
+</div>
+
+<div class="col-md-8 offset-md-2">
+
+    <div class="card-header">
+        <div class="container">
+            <h1>Add New Product</h1>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="variantForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Product Name Field -->
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" placeholder="Name" required>
+
+            <!-- Description Field -->
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" rows="4" cols="50" placeholder="Enter a description..."
+                required></textarea>
+
+            <!-- Camera Field -->
+            <label for="camera">Camera:</label>
+            <input type="text" name="camera" id="camera" placeholder="Camera specifications" required>
+
+            <!-- Display Type Field -->
+            <label for="display_type">Display Type:</label>
+            <input type="text" name="display_type" id="display_type" placeholder="Display type" required>
+
+            <!-- Display Size Field -->
+            <label for="display_size">Display Size:</label>
+            <input type="text" name="display_size" id="display_size" placeholder="Display size" required>
+
+            <!-- Processor Field -->
+            <label for="processor">Processor:</label>
+            <input type="text" name="processor" id="processor" placeholder="Processor" required>
+
+            <!-- Battery Field -->
+            <label for="battery">Battery:</label>
+            <input type="text" name="battery" id="battery" placeholder="Battery specifications" required>
+
+            <!-- OS Field -->
+            <label for="os">Operating System:</label>
+            <input type="text" name="os" id="os" placeholder="Operating System" required>
+
+            <!-- Network Type Field -->
+            <label for="network_type">Network Type:</label>
+            <input type="text" name="network_type" id="network_type" placeholder="Network Type" required>
+
+            <!-- Brand Field -->
+            <label for="ram">Brand:</label>
+            <select name="brand" id="brand">
+                <option value="">Select Brand</option>
+                {% for brand in brands %}
+                <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" id="submit-button">Add Product</button>
+        </form>
+    </div>
+</div>
+
+</div>
+{% endblock %}

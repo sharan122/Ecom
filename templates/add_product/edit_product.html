@@ -1,0 +1,118 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+<style>
+    /* Basic styling for the form container */
+    #variantForm {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    /* Styling for form elements */
+    #variantForm label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    #variantForm select,
+    #variantForm input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #variantForm input[type="file"] {
+        padding: 0;
+    }
+
+    /* Styling for the submit button */
+    #submit-button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #submit-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+<div class="container-fluid">
+    <h4 class="page-title">Product Form</h4>
+</div>
+
+<div class="col-md-8 offset-md-2">
+
+    <div class="card-header">
+        <div class="container">
+            <h1>Add New Product</h1>
+        </div>
+    </div>
+    <div class="card-body">
+         <form action="{% url 'Product:edit_product' product.id %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="productName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="productName" name="name" value="{{ product.name }}">
+        </div>
+        <div class="mb-3">
+            <label for="productDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="productDescription" name="description">{{ product.description }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="productCamera" class="form-label">Camera</label>
+            <input type="text" class="form-control" id="productCamera" name="camera" value="{{ product.camera }}">
+        </div>
+        <div class="mb-3">
+            <label for="productDisplayType" class="form-label">Display Type</label>
+            <input type="text" class="form-control" id="productDisplayType" name="display_type" value="{{ product.display_type }}">
+        </div>
+        <div class="mb-3">
+            <label for="productDisplaySize" class="form-label">Display Size</label>
+            <input type="text" class="form-control" id="productDisplaySize" name="display_size" value="{{ product.display_size }}">
+        </div>
+        <div class="mb-3">
+            <label for="productProcessor" class="form-label">Processor</label>
+            <input type="text" class="form-control" id="productProcessor" name="processor" value="{{ product.processor }}">
+        </div>
+        <div class="mb-3">
+            <label for="productBattery" class="form-label">Battery</label>
+            <input type="text" class="form-control" id="productBattery" name="battery" value="{{ product.battery }}">
+        </div>
+        <div class="mb-3">
+            <label for="productOS" class="form-label">OS</label>
+            <input type="text" class="form-control" id="productOS" name="os" value="{{ product.os }}">
+        </div>
+        <div class="mb-3">
+            <label for="productNetworkType" class="form-label">Network Type</label>
+            <input type="text" class="form-control" id="productNetworkType" name="network_type" value="{{ product.network_type }}">
+        </div>
+        <!-- Brand dropdown -->
+        <div class="mb-3">
+            <label for="productBrand" class="form-label">Brand</label>
+            <select class="form-select" id="productBrand" name="brand">
+                {% for brand in brands %}
+                    <option value="{{ brand.id }}" {% if product.brand.id == brand.id %}selected{% endif %}>
+                        {{ brand.brand_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+    </div>
+</div>
+
+</div>
+{% endblock %}

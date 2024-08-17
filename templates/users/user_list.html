@@ -1,0 +1,79 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+
+
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+            <h4 class="page-title">Component</h4>
+            <div class="row">
+
+                <div class="card">
+                    <h5>User Details</h5>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Join Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+
+
+
+                            {% for user in users%}
+                            <tbody>
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.first_name }}<span> </span>{{ user.last_name }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.phone_no }}</td>
+                                    <td>{{ user.date_joined }}</td>
+
+                                    {% if user.is_active %}
+                                    <td><a href="{% url 'Users:block' user.id %}"><span
+                                                class="badge badge-danger">Block</span></a></td>
+                                    {% else %}
+                                    <td><a href="{% url 'Users:block' user.id %}"><span
+                                                class="badge badge-success">Unblock</span></a></td>
+                                    {% endif %}
+
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+
+
+                        </table>
+
+                    </div>
+                    <div class="pagination">
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+<style>
+    /* Basic styling for the form container */
+    #variantForm {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    /* Styling for form elements */
+    #variantForm label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    #variantForm select,
+    #variantForm input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #variantForm input[type="file"] {
+        padding: 0;
+    }
+
+    /* Styling for the submit button */
+    #submit-button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #submit-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+<div class="container-fluid">
+    <h4 class="page-title">Product Form</h4>
+</div>
+
+<div class="col-md-8 offset-md-2">
+
+    <div class="card-header">
+        <div class="container">
+            <h1>Add New Variant</h1>
+        </div>
+    </div>
+    <div class="card-body">
+          <form action="{% url 'Product:edit_variant' variant.id %}"method="POST"enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <divclass="mb-3"><label for="variantRam" class="form-label">RAM</label><select class="form-select" id="variantRam" name="ram"><option value="4" {% if variant.ram == 4 %}selected{% endif %}>4 GB</option><option value="6" {% if variant.ram == 6 %}selected{% endif %}>6 GB</option><option value="8" {% if variant.ram == 8 %}selected{% endif %}>8 GB</option><option value="12" {% if variant.ram == 12 %}selected{% endif %}>12 GB</option><option value="16" {% if variant.ram == 16 %}selected{% endif %}>16 GB</option></select></div><div class="mb-3"><label for="variantRom" class="form-label">ROM</label><select class="form-select" id="variantRom" name="rom"><option value="64" {% if variant.rom == 64 %}selected{% endif %}>64 GB</option><option value="128" {% if variant.rom == 128 %}selected{% endif %}>128 GB</option><option value="256" {% if variant.rom == 256 %}selected{% endif %}>256 GB</option><option value="512" {% if variant.rom == 512 %}selected{% endif %}>512 GB</option><option value="1024" {% if variant.rom == 1024 %}selected{% endif %}>1 TB</option></select></div><div class="mb-3"><label for="variantColor" class="form-label">Color</label><input type="text" class="form-control" id="variantColor" name="color" value="{{ variant.color }}"></div><div class="mb-3"><label for="variantQty" class="form-label">Quantity</label><input type="number" class="form-control" id="variantQty" name="qty" value="{{ variant.qty }}"></div><div class="mb-3"><label for="variantPrice" class="form-label">Price</label><input type="number" class="form-control" id="variantPrice" name="price" step="0.001" value="{{ variant.price }}"></div><!-- Image Fields --><div class="mb-3"><label for="image1" class="form-label">Image 1 (Optional):</label><input type="file" class="form-control" id="image1" name="image1" accept="image/*">
+        {% if variant.image1 %}
+            <img src="{{ variant.image1.url }}"alt="Image 1"class="img-thumbnail mt-2"width="150">
+        {% endif %}
+    </div><div class="mb-3"><label for="image2" class="form-label">Image 2 (Optional):</label><input type="file" class="form-control" id="image2" name="image2" accept="image/*">
+        {% if variant.image2 %}
+            <img src="{{ variant.image2.url }}"alt="Image 2"class="img-thumbnail mt-2"width="150">
+        {% endif %}
+    </div><div class="mb-3"><label for="image3" class="form-label">Image 3 (Optional):</label><input type="file" class="form-control" id="image3" name="image3" accept="image/*">
+        {% if variant.image3 %}
+            <img src="{{ variant.image3.url }}"alt="Image 3"class="img-thumbnail mt-2"width="150">
+        {% endif %}
+    </div><div class="mb-3"><label for="image4" class="form-label">Image 4 (Optional):</label><input type="file" class="form-control" id="image4" name="image4" accept="image/*">
+        {% if variant.image4 %}
+            <img src="{{ variant.image4.url }}"alt="Image 4"class="img-thumbnail mt-2"width="150">
+        {% endif %}
+    </div><button type="submit" class="btn btn-primary">Save changes</button></form>
+    </div>
+</div>
+
+</div>
+{% endblock %}

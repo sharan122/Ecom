@@ -1,0 +1,88 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+            <h4 class="page-title">Component</h4>
+            <div class="row">
+
+                <div class="card">
+                    <h5>Product Performance</h5>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Brand ID</th>
+                                    <th>Brand Name</th>
+
+
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+
+
+
+                            <tbody>
+                                {% for brand in brands%}
+                                <tr>
+                                    <td>{{ brand.id }}</td>
+                                    <td>{{ brand.brand_name }}</td>
+                                   {% if brand.status %}
+                                    <td> <span class="glyphicon">&#xe013;</span></td>
+                                    {% else %}
+                                    <td><span class="glyphicon">&#xe014;</span></td>
+                                    {% endif %}
+
+
+                                    {% if brand.status %}
+                                    <td><a href="{% url 'Brands:block_brand' brand.id %}"><span
+                                                class="badge badge-danger">Block</span></a></td>
+                                    {% else %}
+                                    <td><a href="{% url 'Brands:block_brand' brand.id %}"><span
+                                                class="badge badge-success">Unblock</span></a></td>
+                                    {% endif %}
+
+                    
+                                </tr>
+                            </tbody>
+
+                            {% endfor %}
+
+                            
+
+
+                        </table>
+
+                    </div>
+                    <div class="pagination">
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div>
+
+                        <a class="btn btn-outline-info" href="{% url 'Brands:create_brand' %}">Add New Brand</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

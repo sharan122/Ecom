@@ -1,0 +1,92 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+            <h4 class="page-title">Component</h4>
+            <div class="row">
+
+                <div class="card">
+                    <h5>Product Performance</h5>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Name</th>
+
+
+                                    <th>Brand</th>
+                                    
+
+                                    <th>View Varients</th>
+                                    <th>Edit</th>
+
+                                </tr>
+                            </thead>
+
+
+
+                            <tbody>
+                                {% for product in products%}
+
+                                <tr>
+                                    <td>{{ product.id }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.brand.brand_name }}</td>
+
+                                  
+
+                                    <td>
+
+                                        <a href="{% url 'Product:view_variant' product.id %}"><button
+                                                class="btn btn-status btn-warning">Varients</button></a>
+                                    </td>
+                                    <td>
+
+                                        <a href="{% url 'Product:edit_product' product.id %}"><button
+                                                class="btn btn-status btn-success">Edit</button></a>
+                                    </td>
+                                    
+
+                                </tr>
+                            </tbody>
+
+                            {% endfor %}
+
+                            
+
+
+                        </table>
+
+                    </div>
+                    <div class="pagination">
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div>
+
+                        <a class="btn btn-outline-info" href="{% url 'Product:create_product' %}">Add New Product</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

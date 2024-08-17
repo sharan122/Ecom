@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncWise Login</title>
+    <link href="{% static 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' %}" rel="stylesheet">
+        <!-- Core Style CSS -->
+        <link rel="stylesheet" href="{% static 'css/core-style.css'%}">
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-md-6">
+                <div class="card shadow-sm p-4">
+                    <div class="text-center mb-4">
+                        <img src="{% static 'img/core-img/sync.png'%}"  alt="SyncWise Logo" width="100">
+                    </div>
+                    <h3 class="text-center mb-4">WELCOME BACK!</h3>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Password" name="password">
+                        </div>
+                        <button type="submit" class="btn btn-dark btn-block">LOGIN</button>
+                        
+                        {% load socialaccount %}
+                        <a class="btn btn-light btn-block" href="{% provider_login_url 'google' %}">
+    <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo">
+    Sign up with Google
+</a>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="#">FORGOT PASSWORD?</a>
+                            <a href="{% url 'Accounts:user_signup' %}">SIGNUP?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'https://code.jquery.com/jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

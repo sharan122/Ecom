@@ -1,0 +1,104 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="card">
+                    <h5>Product Varients</h5>
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Name</th>
+                                    <th>Image</th>
+                                    <th>Brand</th>
+                                    <th>Quantity</th>
+                                    <th>RAM</th>
+                                    <th>Storage</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <th>Edit</th>
+
+                                </tr>
+                            </thead>
+
+
+
+                            <tbody>
+                                {% for product in products%}
+                              
+                                <a href=""><tr onclick="window.location.href='{% url 'Product:varient_details' product.id %}';">
+                                    <td>{{ product.p_id.id }}</td>
+                                    <td>{{ product.p_id.name }}</td>
+
+                                    <td>
+                                        <div class="image-container">
+                                            <img src="{{ product.image1.url }}" alt="Product Image">
+                                        </div>
+                                    </td>
+
+                                    <td>{{ product.p_id.brand.brand_name }}</td>
+
+                                    <td>{{ product.qty }}</td>
+                                    <td>{{ product.ram }}</td>
+                                    <td>{{ product.rom }}</td>
+                                    <td>{{ product.price }}</td>
+                                    {% if product.status %}
+                                    <td> <span class="glyphicon">&#xe013;</span></td>
+                                    {% else %}
+                                    <td><span class="glyphicon">&#xe014;</span></td>
+                                    {% endif %}
+                                    
+                                        {% if product.status %}
+                                    <td><a href="{% url 'Product:block_varient' product.id %}"><span
+                                                class="badge badge-danger">Deactivate</span></a></td>
+                                    {% else %}
+                                    <td><a href="{% url 'Product:block_varient' product.id %}"><span
+                                                class="badge badge-success">Activate</span></a></td>
+                                    {% endif %}
+
+                                 
+                                    <td>
+                                        <a href="{% url 'Product:edit_variant' product.id%}"> <button class="btn btn-status btn-success">Edit</button></a> 
+                                    </td>
+
+
+
+                                </tr> </a>
+                                            
+
+                            </tbody>
+
+                            {% endfor%}
+
+
+                        </table>
+                 
+                       
+                        <a href="{% url 'Product:add_new_varient' product.id %}">
+                            <button class="btn btn-status btn-success">Add Variant</button>
+                        </a>
+                 
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

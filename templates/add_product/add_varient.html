@@ -1,0 +1,105 @@
+{% extends "base/base.html" %}
+
+{% block base %}
+<style>
+    /* Basic styling for the form container */
+    #variantForm {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    /* Styling for form elements */
+    #variantForm label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    #variantForm select,
+    #variantForm input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #variantForm input[type="file"] {
+        padding: 0;
+    }
+
+    /* Styling for the submit button */
+    #submit-button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #submit-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Product Details</div>
+                    </div>
+                    <div class="card-body">
+                        <form id="variantForm" method="POST" enctype="multipart/form-data">                            {% csrf_token %}
+
+                            <label for="ram">RAM:</label><select name="ram" id="ram">
+                                <option value="">Select RAM</option>
+                                <option value="4">4 GB</option>
+                                <option value="6">6 GB</option>
+                                <option value="8">8 GB</option>
+                                <option value="12">12 GB</option>
+                                <option value="16">16 GB</option>
+                                <option value="32">32 GB</option>
+                            </select><label for="rom">ROM:</label>
+                            <select name="rom" id="rom">
+                                <option value="">Select ROM</option>
+                                <option value="64">64 GB</option>
+                                <option value="128">128 GB</option>
+                                <option value="256">256 GB</option>
+                                <option value="512">512 GB</option>
+                                <option value="1">1 TB</option>
+                            </select>
+                            <label for="color">Colour:</label><input type="text" name="color" id="color"
+                                placeholder="Colour">
+                            <label for="qty">Quantity:</label>
+                            <input type="number" name="qty" id="qty" placeholder="Quantity">
+                            <label for="price">Price:</label>
+                            <input type="number" name="price" id="price"
+                                placeholder="Price"><!-- Updated Image Fields -->
+                            <label for="image1">Image 1
+                                (Required):</label>
+                            <input type="file" name="image1" id="image1" accept="image/*" required>
+                            <label for="image2">Image 2 (Required):</label>
+                            <input type="file" name="image2" id="image2" accept="image/*" required>
+                            <label for="image3">Image 3
+                                (Optional):</label>
+                            <input type="file" name="image3" id="image3" accept="image/*">
+                            <label for="image4">Image 4 (Optional):</label>
+                            <input type="file" name="image4" id="image4" accept="image/*">
+                            <button type="submit" id="submit-button">Add Variant</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

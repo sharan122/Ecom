@@ -1,10 +1,17 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from .models import Product,variant 
+from .models import Product,variant,Category
 from Brands.models import Brand
 from django.db.models import Sum
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
+import re
+
+
+
+def is_staff(user):
+    return user.is_staff
+
 
 # Create your views here.
 @login_required(login_url='Accounts:admin_login')
@@ -21,38 +28,66 @@ def add_product(request):
 
 
 
+
+
 @login_required(login_url='Accounts:admin_login')
-@never_cache
+@never_cache 
+@user_passes_test(is_staff,'/')
 def create_product(request):
     brands = Brand.objects.filter(status=True)
-    context = {'brands': brands}
+    categories = Category.objects.filter(is_active=True)
+    context = {'brands': brands, 'categories': categories}
 
     if request.method == 'POST':
-       
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        camera = request.POST.get('camera')
-        display_type = request.POST.get('display_type')
-        display_size = request.POST.get('display_size')
-        processor = request.POST.get('processor')
-        battery = request.POST.get('battery')
-        os = request.POST.get('os')
-        network_type = request.POST.get('network_type')
+        name = request.POST.get('name').strip()
+        description = request.POST.get('description').strip()
+        camera = request.POST.get('camera').strip()
+        display_type = request.POST.get('display_type').strip()
+        display_size = request.POST.get('display_size').strip()
+        processor = request.POST.get('processor').strip()
+        battery = request.POST.get('battery').strip()
+        os = request.POST.get('os').strip()
+        network_type = request.POST.get('network_type').strip()
         brand_id = request.POST.get('brand')
+        category_ids = request.POST.getlist('categories[]')
 
-        
+
         if not brand_id or not name or not description:
-            
-            context['error'] = "Please fill in all required fields."
+            messages.error(request, "Please fill in all required fields.")
+            return render(request, "add_product/new_products.html", context)
+
+      
+        if len(name) < 3:
+            messages.error(request, "Product name must be at least 3 characters long.")
+            return render(request, "add_product/new_products.html", context)
+
+        if len(description) < 10:
+            messages.error(request, "Product description must be at least 10 characters long.")
+            return render(request, "add_product/new_products.html", context)
+
+
+        if not camera.replace('+', '').isdigit():
+            messages.error(request, "Camera field should only contain numbers and '+' sign.")
+            return render(request, "add_product/new_products.html", context)
+
+
+        try:
+            float_display_size = float(display_size)
+        except ValueError:
+            messages.error(request, "Display size must be a valid number.")
+            return render(request, "add_product/new_products.html", context)
+
+  
+        if not battery.isdigit():
+            messages.error(request, "Battery field should only contain numbers.")
             return render(request, "add_product/new_products.html", context)
 
         try:
             brand_instance = Brand.objects.get(id=brand_id)
         except Brand.DoesNotExist:
-            context['error'] = "Selected brand does not exist."
+            messages.error(request, "Selected brand does not exist.")
             return render(request, "add_product/new_products.html", context)
 
-      
         new_product = Product(
             name=name,
             description=description,
@@ -66,37 +101,101 @@ def create_product(request):
             brand=brand_instance,
         )
         new_product.save()
+
+        if category_ids:
+            categories = Category.objects.filter(id__in=category_ids)
+            new_product.categories.set(categories)
+
+        messages.success(request, "Product created successfully.")
         return redirect('Product:add_product')
-       
 
     return render(request, "add_product/new_products.html", context)
 
+
+
+
+
+
 @login_required(login_url='Accounts:admin_login')
 @never_cache
-def edit_product(request,id):
+@user_passes_test(is_staff,'/')
+def edit_product(request, id):
     product = get_object_or_404(Product, id=id)
     brands = Brand.objects.filter(status=True)
-
+    categories = Category.objects.filter(is_active=True)
+    context = {'product': product, 'brands': brands, 'categories': categories}
+    
     if request.method == "POST":
-        product.name = request.POST.get('name')
-        product.description = request.POST.get('description')
-        product.camera = request.POST.get('camera')
-        product.display_type = request.POST.get('display_type')
-        product.display_size = request.POST.get('display_size')
-        product.processor = request.POST.get('processor')
-        product.battery = request.POST.get('battery')
-        product.os = request.POST.get('os')
-        product.network_type = request.POST.get('network_type')
-        product.brand_id = request.POST.get('brand')
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        camera = request.POST.get('camera')
+        display_type = request.POST.get('display_type')
+        display_size = request.POST.get('display_size')
+        processor = request.POST.get('processor')
+        battery = request.POST.get('battery')
+        os = request.POST.get('os')
+        network_type = request.POST.get('network_type')
+        brand_id = request.POST.get('brand')
+        category_ids = request.POST.getlist('categories[]')
+        
+        # Validations
+        if not name or not description or not brand_id:
+            messages.error(request, "Please fill in all required fields.")
+            return render(request, "add_product/edit_product.html", context)
+
+        if len(name) < 3:
+            messages.error(request, "Product name must be at least 3 characters long.")
+            return render(request, "add_product/edit_product.html", context)
+
+        if len(description) < 10:
+            messages.error(request, "Product description must be at least 10 characters long.")
+            return render(request, "add_product/edit_product.html", context)
+
+        if not camera.replace('+', '').isdigit():
+            messages.error(request, "Camera field should only contain numbers and '+' sign.")
+            return render(request, "add_product/edit_product.html", context)
+
+        try:
+            float_display_size = float(display_size)
+        except ValueError:
+            messages.error(request, "Display size must be a valid number.")
+            return render(request, "add_product/edit_product.html", context)
+
+        if not battery.isdigit():
+            messages.error(request, "Battery field should only contain numbers.")
+            return render(request, "add_product/edit_product.html", context)
+
+        try:
+            brand_instance = Brand.objects.get(id=brand_id)
+        except Brand.DoesNotExist:
+            messages.error(request, "Selected brand does not exist.")
+            return render(request, "add_product/edit_product.html", context)
+
+        # Update Product instance
+        product.name = name
+        product.description = description
+        product.camera = camera
+        product.display_type = display_type
+        product.display_size = float_display_size  # Update with the converted float
+        product.processor = processor
+        product.battery = battery
+        product.os = os
+        product.network_type = network_type
+        product.brand = brand_instance
         product.save()
+
+        # Update categories
+        product.categories.set(category_ids)
+
         return redirect('Product:add_product') 
 
-    return render(request, 'add_product/edit_product.html', {'product': product, 'brands': brands})
+    return render(request, 'add_product/edit_product.html', context)
 
 #-----------------------------VARIENT---------------------
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
+@user_passes_test(is_staff,'/')
 def view_variant(request,id):
     product = get_object_or_404(Product, pk=id)  
     varients=variant.objects.filter(p_id=id)
@@ -106,6 +205,7 @@ def view_variant(request,id):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
+@user_passes_test(is_staff,'/')
 def add_new_varient(request, id):
     products = get_object_or_404(Product, pk=id)
     context = {'varients': products, 'product_id': products}
@@ -140,6 +240,7 @@ def add_new_varient(request, id):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
+@user_passes_test(is_staff,'/')
 def varient_details(request,id):
     varient=variant.objects.filter(id=id)
     context={'varients':varient}
@@ -155,6 +256,7 @@ def block_varient(request, id):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
+@user_passes_test(is_staff,'/')
 def edit_variant(request, id):
     variants = get_object_or_404(variant, id=id)
     products = Product.objects.all()
@@ -166,20 +268,20 @@ def edit_variant(request, id):
         qty = request.POST.get('qty')
         price = request.POST.get('price')
         
-        if not qty.isdigit() or int(qty) <= 0:
+        if not qty.isdigit() or int(qty) <0:
             messages.error(request, "Quantity must be a positive integer.")
             return render(request, 'add_product/edit_varient.html', context)
 
-        if not price.isdigit() or int(price) <= 0:
+        if float(price) <= 0:
             messages.error(request, "Price must be a positive integer.")
             return render(request, 'add_product/edit_varient.html', context)
 
         # Update the variant
-        variant.ram = ram
-        variant.rom = rom
-        variant.color = color
-        variant.qty = int(qty)
-        variant.price = int(price)
+        variants.ram = ram
+        variants.rom = rom
+        variants.color = color
+        variants.qty = qty
+        variants.price = price
 
         if'image1'in request.FILES:
             variants.image1 = request.FILES['image1']
@@ -199,11 +301,102 @@ def edit_variant(request, id):
 #-----------------------------Explore page-----------------------------------
 
 def explore(request):
-    products=variant.objects.filter(qty__gt=0, status=True)
+    products=variant.objects.filter(status=True)
     context={'products':products}
     return render(request, 'explore/explore.html', context)
 
 def signle_product(request,id):
-    varient=variant.objects.filter(id=id)
-    context={'varients':varient}
+    varient=variant.objects.get(id=id)
+    product=varient.p_id
+    varient_list=variant.objects.filter(p_id=product)
+    context={'varients':varient,
+             'varient_list': varient_list,
+             }
     return render(request,"single_product/single_product.html",context)
+
+
+#-------------------------------Category-------------------------------------
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'/')
+def create_category(request):
+    if request.method == 'POST':
+        name = request.POST.get('category_name')
+        
+        # Check if the name is provided
+        if not name:
+            messages.error(request, 'Category name is required.')
+            return render(request, 'category/create_category.html')
+        
+        # Check if the name contains only white spaces
+        if not name.strip():
+            messages.error(request, 'Category name cannot contain only white spaces.')
+            return render(request, 'category/create_category.html')
+        
+        # Check if the name contains only alphabets
+        if not re.match("^[A-Za-z\s]+$", name):
+            messages.error(request, 'Category name can only contain alphabets.')
+            return render(request, 'category/create_category.html')
+        
+        # Check if the name is too short
+        if len(name.strip()) < 3:
+            messages.error(request, 'Category name must be at least 3 characters long.')
+            return render(request, 'category/create_category.html')
+        
+        # Check if the category already exists
+        if Category.objects.filter(name=name.strip()).exists():
+            messages.error(request, 'Category already exists.')
+            return render(request, 'category/create_category.html')
+        
+        # If all validations pass, create the category
+        Category.objects.create(name=name.strip())
+        messages.success(request, 'Category created successfully!')
+        return redirect('Product:category_list')
+    
+    return render(request, 'category/create_category.html')
+
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'/')
+def edit_category(request,id):
+    cat_id=get_object_or_404(Category,id=id)
+    context={'category':cat_id}
+    if request.method=='POST':
+        name=request.POST.get('category_name')
+        if not name:
+            messages.error(request, 'Category name is required.')
+            return render(request, 'category/edit_category.html',context)
+        
+        # Check if the name contains only white spaces
+        if not name.strip():
+            messages.error(request, 'Category name cannot contain only white spaces.')
+            return render(request, 'category/edit_category.html',context)
+        
+        # Check if the name contains only alphabets
+        if not re.match("^[A-Za-z\s]+$", name):
+            messages.error(request, 'Category name can only contain alphabets.')
+            return render(request, 'category/edit_category.html',context)
+        
+        # Check if the name is too short
+        if len(name.strip()) < 3:
+            messages.error(request, 'Category name must be at least 3 characters long.')
+            return render(request, 'category/edit_category.html',context)
+        
+        # Check if the category already exists
+        if Category.objects.filter(name=name.strip()).exists():
+            messages.error(request, 'Category already exists.')
+            return render(request, 'category/edit_category.html',context)
+        
+        cat_id.name=name
+        cat_id.save() 
+        messages.success(request, 'Category created successfully!')
+        return redirect('Product:category_list')
+    return render(request, 'category/edit_category.html',context)
+    
+
+
+def category_list(request):
+    category=Category.objects.all()
+    context={'categorys':category}
+    return render(request,'category/category_list.html',context)
+

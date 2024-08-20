@@ -59,6 +59,7 @@
             <h1>Add New Product</h1>
         </div>
     </div>
+     {% include 'alerts/alert.html' %}
     <div class="card-body">
         <form id="variantForm" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -106,6 +107,12 @@
                 <option value="">Select Brand</option>
                 {% for brand in brands %}
                 <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+                {% endfor %}
+            </select>
+            <label for="categories">Select Categories:</label>
+            <select name="categories[]" id="categories" multiple>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
                 {% endfor %}
             </select>
 

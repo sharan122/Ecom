@@ -77,12 +77,12 @@
                                 <option value="512">512 GB</option>
                                 <option value="1">1 TB</option>
                             </select>
-                            <label for="color">Colour:</label><input type="text" name="color" id="color"
+                            <label for="color">Colour:</label><input type="text" name="color" pattern="[A-Za-z]+" id="color"
                                 placeholder="Colour">
                             <label for="qty">Quantity:</label>
-                            <input type="number" name="qty" id="qty" placeholder="Quantity">
+                            <input type="number" name="qty" min="0" id="qty" placeholder="Quantity">
                             <label for="price">Price:</label>
-                            <input type="number" name="price" id="price"
+                            <input type="number" min="0" name="price" id="price"
                                 placeholder="Price"><!-- Updated Image Fields -->
                             <label for="image1">Image 1
                                 (Required):</label>

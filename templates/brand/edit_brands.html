@@ -55,16 +55,16 @@
 <div class="col-md-8 offset-md-2">
     
         <div class="card-header">
-            <div class="container"><h1>Add New Brand</h1></div>
+            <div class="container"><h1>Edit Brand</h1></div>
         </div>
         {% include 'alerts/alert.html' %}
         <div class="card-body">
-            <form id="variantForm" method="POST" enctype="multipart/form-data">
+            <form id="variantForm" method="POST" action="{% url 'Brands:edit_brand' brand_id.id %}" enctype="multipart/form-data">
                 {% csrf_token %}
             
                 <!-- Product Name Field -->
                 <label for="name">Brand Name:</label>
-                <input type="text" name="brand_name" id="name" placeholder="Brand Name" required>
+                <input type="text" name="brand_name" id="name" placeholder="Brand Name" value="{{brand_id.brand_name}}" required>
             
                 <button type="submit" id="submit-button">Add Brand</button>
             </form>

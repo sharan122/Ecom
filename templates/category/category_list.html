@@ -18,13 +18,10 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Brand ID</th>
-                                    <th>Brand Name</th>
-
-
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Category ID</th>
+                                    <th>Category Name</th>
                                     <th>Edit</th>
+                                    <th>Action</th>
 
                                 </tr>
                             </thead>
@@ -32,27 +29,31 @@
 
 
                             <tbody>
-                                {% for brand in brands%}
+                              {% for category in categorys%}
+
                                 <tr>
-                                    <td>{{ brand.id }}</td>
-                                    <td>{{ brand.brand_name }}</td>
-                                   {% if brand.status %}
-                                    <td> <span class="glyphicon">&#xe013;</span></td>
-                                    {% else %}
-                                    <td><span class="glyphicon">&#xe014;</span></td>
-                                    {% endif %}
+                                    <td>{{ category.id }}</td>
+                                    <td>{{ category.name }}</td>
 
+                                   <td>
 
-                                    {% if brand.status %}
-                                    <td><a href="{% url 'Brands:block_brand' brand.id %}"><span
+                                        <a href="{% url 'Product:edit_category' category.id %}"><button
+                                                class="btn btn-status btn-success">Edit</button></a>
+                                    </td>
+
+                                      {% if category.is_active %}
+                                    <td><a href=""><span
                                                 class="badge badge-danger">Block</span></a></td>
                                     {% else %}
-                                    <td><a href="{% url 'Brands:block_brand' brand.id %}"><span
+                                    <td><a href=""><span
                                                 class="badge badge-success">Unblock</span></a></td>
-                                    {% endif %}
+                                    {% endif %} 
 
-                                    <td><a href="{% url 'Brands:edit_brand' brand.id %}"><span
-                                                class="badge badge-warning">Edit</span></a></td>
+
+
+                                   
+                                    
+
                                 </tr>
                             </tbody>
 
@@ -75,7 +76,7 @@
                     </div>
                     <div>
 
-                        <a class="btn btn-outline-info" href="{% url 'Brands:create_brand' %}">Add New Brand</a>
+                        <a class="btn btn-outline-info" href="{% url 'Product:create_category' %}">Add New Category</a>
 
                     </div>
 

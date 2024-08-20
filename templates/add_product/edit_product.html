@@ -60,6 +60,7 @@
         </div>
     </div>
     <div class="card-body">
+     {% include 'alerts/alert.html' %}
          <form action="{% url 'Product:edit_product' product.id %}" method="POST">
         {% csrf_token %}
         <div class="mb-3">
@@ -109,6 +110,15 @@
                 {% endfor %}
             </select>
         </div>
+
+        <div class="form-group">
+        <label for="categories">Select Categories:</label>
+        <select name="categories[]" id="categories" class="form-control" multiple>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if category.id in selected_categories %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
         <button type="submit" class="btn btn-primary">Save changes</button>
     </form>
     </div>

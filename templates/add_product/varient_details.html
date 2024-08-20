@@ -127,6 +127,14 @@
                                     <p><strong>Operating System:</strong> {{ variant.p_id.os }}</p>
                                     <p><strong>Network Type:</strong> {{ variant.p_id.network_type }}</p>
                                     <p><strong>Brand:</strong> {{ variant.p_id.brand.brand_name }}</p>
+                                    <p><strong>Category:</strong>
+                                    
+                                    {% for cat in variant.p_id.categories.all %}
+
+                                     {{ cat.name}},
+                                     
+                                     {% endfor %}
+                                     </p>
                                 </div>
 
                                 <div class="variant-card">

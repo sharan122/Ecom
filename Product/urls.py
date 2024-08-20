@@ -17,6 +17,9 @@ urlpatterns = [
     path('explore/', views.explore,name='explore'),
     path('signle_product/<int:id>', views.signle_product,name='signle_product'),
     path('block_varient/<int:id>/', views.block_varient, name='block_varient'),
+    path('category_list/', views.category_list, name='category_list'),
+    path('create_category/', views.create_category, name='create_category'),
+    path('edit_category/<int:id>/', views.edit_category, name='edit_category'),
     
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

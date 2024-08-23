@@ -6,8 +6,7 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
 import re
-
-
+from Decorators.decorators import user_auth
 
 def is_staff(user):
     return user.is_staff
@@ -16,9 +15,10 @@ def is_staff(user):
 # Create your views here.
 @login_required(login_url='Accounts:admin_login')
 @never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def add_product(request):
     products=Product.objects.all()
-    # product_qty_sums = variant.objects.values('p_id').annotate(total_qty=Sum('qty'))
+    # product_qty_sums = variant.objects.values('p_id').annotate(total_qty=Sum('qty')) 
     
     context={'products':products,
             #  'product_qty_sums':product_qty_sums
@@ -32,7 +32,7 @@ def add_product(request):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache 
-@user_passes_test(is_staff,'/')
+@user_passes_test(is_staff,'Accounts:admin_login')
 def create_product(request):
     brands = Brand.objects.filter(status=True)
     categories = Category.objects.filter(is_active=True)
@@ -118,7 +118,7 @@ def create_product(request):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
-@user_passes_test(is_staff,'/')
+@user_passes_test(is_staff,'Accounts:admin_login')
 def edit_product(request, id):
     product = get_object_or_404(Product, id=id)
     brands = Brand.objects.filter(status=True)
@@ -195,7 +195,7 @@ def edit_product(request, id):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
-@user_passes_test(is_staff,'/')
+@user_passes_test(is_staff,'Accounts:admin_login')
 def view_variant(request,id):
     product = get_object_or_404(Product, pk=id)  
     varients=variant.objects.filter(p_id=id)
@@ -205,7 +205,7 @@ def view_variant(request,id):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
-@user_passes_test(is_staff,'/')
+@user_passes_test(is_staff,'Accounts:admin_login')
 def add_new_varient(request, id):
     products = get_object_or_404(Product, pk=id)
     context = {'varients': products, 'product_id': products}
@@ -232,19 +232,24 @@ def add_new_varient(request, id):
             image4=image4,
             p_id=products
         )
+        if variant.objects.filter(ram=ram,rom=rom,color=color).exists():
+            messages.warning(request,'variant is already exist')
+            return redirect(request.path_info)
         new_variant_instance.save()
 
     return render(request, "add_product/add_varient.html", context)
+
        
 
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
-@user_passes_test(is_staff,'/')
+@user_passes_test(is_staff,'Accounts:admin_login')
 def varient_details(request,id):
     varient=variant.objects.filter(id=id)
     context={'varients':varient}
     return render(request,"add_product/varient_details.html",context)
+
 
 def block_varient(request, id):
     product = get_object_or_404(variant, id=id)
@@ -299,12 +304,13 @@ def edit_variant(request, id):
 
 
 #-----------------------------Explore page-----------------------------------
-
+@user_auth
 def explore(request):
-    products=variant.objects.filter(status=True)
+    products=variant.objects.all()
     context={'products':products}
     return render(request, 'explore/explore.html', context)
 
+@user_auth
 def signle_product(request,id):
     varient=variant.objects.get(id=id)
     product=varient.p_id
@@ -318,7 +324,7 @@ def signle_product(request,id):
 #-------------------------------Category-------------------------------------
 @login_required(login_url='Accounts:admin_login')
 @never_cache
-@user_passes_test(is_staff,'/')
+@user_passes_test(is_staff,'Accounts:admin_login')
 def create_category(request):
     if request.method == 'POST':
         name = request.POST.get('category_name')
@@ -357,7 +363,7 @@ def create_category(request):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
-@user_passes_test(is_staff,'/')
+@user_passes_test(is_staff,'Accounts:admin_login')
 def edit_category(request,id):
     cat_id=get_object_or_404(Category,id=id)
     context={'category':cat_id}
@@ -394,9 +400,19 @@ def edit_category(request,id):
     return render(request, 'category/edit_category.html',context)
     
 
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def category_list(request):
     category=Category.objects.all()
     context={'categorys':category}
     return render(request,'category/category_list.html',context)
 
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
+def block_category(request,id):
+    cat_id=get_object_or_404(Category,id=id)
+    cat_id.is_active = not cat_id.is_active
+    cat_id.save()
+    return redirect('Product:category_list')

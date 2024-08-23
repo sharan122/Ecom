@@ -30,10 +30,14 @@
     <!-- Single Product Thumb -->
     <div class="single_product_thumb clearfix">
         <div class="product_thumbnail_slides ">
-            <img src="{{ varients.image1.url }}" alt="" style="width: 60vw; height: 70vh; object-fit: contain;">
-            <img src="{{ varients.image2.url }}" alt="" style="width: 60vw; height: 70vh; object-fit: contain;">
-            <img src="{{ varients.image3.url }}" alt="" style="width: 60vw; height: 70vh; object-fit: contain;">
-            <img src="{{ varients.image4.url }}" alt="" style="width: 60vw; height: 70vh; object-fit: contain;">
+            <img src="{{ varients.image1.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
+            <img src="{{ varients.image2.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
+            {% if  varients.image3 %}
+            <img src="{{ varients.image3.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
+            {% endif %}
+             {% if  varients.image4 %}
+            <img src="{{ varients.image4.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
+             {% endif %}
         </div>
     </div>
 
@@ -46,7 +50,7 @@
         <p class="product-price"><span class="old-price">$65.00</span>₹ {{varients.price}}</p>
 
 
-        {% if varients.qty <= 0 %} <div class="product-badge offer-badge"
+        {% if varients.qty <= 0 or varients.status == False  %} <div class="product-badge offer-badge"
             style="background-color: #FF0000; width:105px; padding-left:1px">
             <span style="color: #FFF;">Out of Stock</span>
     </div>
@@ -64,7 +68,15 @@
         <!-- Cart & Favourite Box -->
         <div class="cart-fav-box d-flex align-items-center">
             <!-- Cart -->
-            {% if varients.qty > 0 %}
+
+        {% if varients.status == False %} <div class="product-badge offer-badge"
+            style="background-color: #FF0000; width:105px; padding-left:1px">
+            <span style="color: #FFF;">Unavailable</span>
+    </div>
+    {% endif %}
+
+
+            {% if varients.qty > 0 and  varients.status == True  %}
             <button type="submit" name="addtocart" value="5" class="btn essence-btn">Buy Now</button>
             {% endif %}
             <!-- Favourite -->
@@ -73,7 +85,7 @@
             </div>
         </div>
 
-        {% if varients.qty > 0 %}
+        {% if varients.qty > 0 and varients.status == True  %}
         <button type="submit" name="addtocart" value="5" class="btn essence-btn"
             style="margin-top: 10px;background-color:chartreuse;  ">Add to cart</button>
         {% endif %}
@@ -86,7 +98,7 @@
 
             <img src="{{ i.image1.url }}" alt="Variant Image" class="mini-variant-image">
             <div class="variant-info">
-                <p>{{ varients.ram }} RAM / {{ i.rom }} ROM</p>
+                <p>{{ i.ram }} RAM / {{ i.rom }} ROM</p>
                 
             </div>
         </div>

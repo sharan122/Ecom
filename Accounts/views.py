@@ -52,7 +52,7 @@ def user_login(request):
             return HttpResponseRedirect(request.path_info)
     
     return render(request, "login_page/login_page.html")
-#---------------------otp-----------------------------------
+#---------------------SignUp and otp-----------------------------------
 def generate_otp():
     return random.randint(100000, 999999)
 
@@ -95,7 +95,7 @@ def user_signup(request):
             return HttpResponseRedirect(request.path_info)
         
         otp = generate_otp()
-        otp_expiry = timezone.now() + timedelta(minutes=1)
+        otp_expiry = timezone.now() + timedelta(minutes=3)
         
         # Store OTP and expiry time in the session
         request.session['otp'] = otp

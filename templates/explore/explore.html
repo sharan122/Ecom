@@ -186,6 +186,10 @@
                                         <div class="product-badge offer-badge">
                                             <span>Out of Stock</span>
                                         </div>
+                                        {% elif product.status == False or product.p_id.brand.status == False %}
+                                        <div class="product-badge offer-badge">
+                                            <span>Unavailable</span>
+                                        </div>
                                         {% endif %}
                                         <!-- Favourite -->
                                         <div class="product-favourite">
@@ -205,9 +209,11 @@
                                         <!-- Hover Content -->
                                         <div class="hover-content">
                                             <!-- Add to Cart -->
+                                            {% if product.qty > 0 and product.status == True%}
                                             <div class="add-to-cart-btn">
                                                 <a href="#" class="btn essence-btn">Add to Cart</a>
                                             </div>
+                                            {% endif %}
                                         </div>
                                         {% endif %}
                                     </div>

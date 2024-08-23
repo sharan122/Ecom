@@ -1,6 +1,9 @@
 {% extends "base/base.html" %}
 
 {% block base %}
+<!-- Include Cropper.js CSS -->
+<link href="https://unpkg.com/cropperjs/dist/cropper.min.css" rel="stylesheet">
+
 <style>
     /* Basic styling for the form container */
     #variantForm {
@@ -48,19 +51,21 @@
         background-color: #0056b3;
     }
 </style>
+
 <div class="main-panel">
     <div class="content">
         <div class="container-fluid">
-
             <div class="row">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Product Details</div>
                     </div>
                     <div class="card-body">
-                        <form id="variantForm" method="POST" enctype="multipart/form-data">                            {% csrf_token %}
+                        <form id="variantForm" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
 
-                            <label for="ram">RAM:</label><select name="ram" id="ram">
+                            <label for="ram">RAM:</label>
+                            <select name="ram" id="ram">
                                 <option value="">Select RAM</option>
                                 <option value="4">4 GB</option>
                                 <option value="6">6 GB</option>
@@ -68,7 +73,9 @@
                                 <option value="12">12 GB</option>
                                 <option value="16">16 GB</option>
                                 <option value="32">32 GB</option>
-                            </select><label for="rom">ROM:</label>
+                            </select>
+
+                            <label for="rom">ROM:</label>
                             <select name="rom" id="rom">
                                 <option value="">Select ROM</option>
                                 <option value="64">64 GB</option>
@@ -77,23 +84,56 @@
                                 <option value="512">512 GB</option>
                                 <option value="1">1 TB</option>
                             </select>
-                            <label for="color">Colour:</label><input type="text" name="color" pattern="[A-Za-z]+" id="color"
-                                placeholder="Colour">
+
+                            <label for="color">Colour:</label>
+                            <input type="text" name="color" pattern="[A-Za-z]+" id="color" placeholder="Colour">
+
                             <label for="qty">Quantity:</label>
                             <input type="number" name="qty" min="0" id="qty" placeholder="Quantity">
+
                             <label for="price">Price:</label>
-                            <input type="number" min="0" name="price" id="price"
-                                placeholder="Price"><!-- Updated Image Fields -->
-                            <label for="image1">Image 1
-                                (Required):</label>
-                            <input type="file" name="image1" id="image1" accept="image/*" required>
-                            <label for="image2">Image 2 (Required):</label>
-                            <input type="file" name="image2" id="image2" accept="image/*" required>
-                            <label for="image3">Image 3
-                                (Optional):</label>
-                            <input type="file" name="image3" id="image3" accept="image/*">
-                            <label for="image4">Image 4 (Optional):</label>
-                            <input type="file" name="image4" id="image4" accept="image/*">
+                            <input type="number" min="0" name="price" id="price" placeholder="Price">
+
+                            <!-- Image 1 Preview and Cropping Area -->
+                            <div>
+                                <label for="image1">Image 1 (Required):</label>
+                                <input type="file" name="image1" id="image1" accept="image/*" required
+                                    onchange="previewImage(this, 'cropperContainer1')">
+                                <div id="cropperContainer1">
+                                    <img id="cropperImage1" style="max-width: 100%;">
+                                </div>
+                            </div>
+
+                            <!-- Image 2 Preview and Cropping Area -->
+                            <div>
+                                <label for="image2">Image 2 (Required):</label>
+                                <input type="file" name="image2" id="image2" accept="image/*" required
+                                    onchange="previewImage(this, 'cropperContainer2')">
+                                <div id="cropperContainer2">
+                                    <img id="cropperImage2" style="max-width: 100%;">
+                                </div>
+                            </div>
+
+                            <!-- Image 3 Preview and Cropping Area -->
+                            <div>
+                                <label for="image3">Image 3 (Optional):</label>
+                                <input type="file" name="image3" id="image3" accept="image/*"
+                                    onchange="previewImage(this, 'cropperContainer3')">
+                                <div id="cropperContainer3">
+                                    <img id="cropperImage3" style="max-width: 100%;">
+                                </div>
+                            </div>
+
+                            <!-- Image 4 Preview and Cropping Area -->
+                            <div>
+                                <label for="image4">Image 4 (Optional):</label>
+                                <input type="file" name="image4" id="image4" accept="image/*"
+                                    onchange="previewImage(this, 'cropperContainer4')">
+                                <div id="cropperContainer4">
+                                    <img id="cropperImage4" style="max-width: 100%;">
+                                </div>
+                            </div>
+
                             <button type="submit" id="submit-button">Add Variant</button>
                         </form>
                     </div>
@@ -102,4 +142,99 @@
         </div>
     </div>
 </div>
+
+<!-- Include Cropper.js JS -->
+<script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+
+<script>
+    // Initialize cropper instances
+    let croppers = {};
+
+    function previewImage(input, cropperContainerId) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const cropperImage = document.querySelector(`#${cropperContainerId} img`);
+                cropperImage.src = e.target.result;
+
+                // Destroy previous cropper if it exists
+                if (croppers[cropperContainerId]) {
+                    croppers[cropperContainerId].destroy();
+                }
+
+                // Initialize Cropper.js for the image
+                croppers[cropperContainerId] = new Cropper(cropperImage, {
+                    aspectRatio: 1 / 1,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    scalable: false,
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.getElementById('variantForm').addEventListener('submit', function (event) {
+        event.preventDefault();  // Prevent immediate form submission
+
+        // Image validation
+        const image1 = document.getElementById('image1').files[0];
+        const image2 = document.getElementById('image2').files[0];
+        let acceptedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (image1 && !acceptedTypes.includes(image1.type)) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Please Upload Image",
+            });
+            return false;
+        }
+        if (image2 && !acceptedTypes.includes(image2.type)) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Please Upload Image",
+            });
+            return false;
+        }
+
+        // SweetAlert trigger
+        Swal.fire("Varient Added");
+
+        // Handle Cropping and Form Submission after SweetAlert
+        const form = this;
+        setTimeout(() => {
+            // Process cropped images
+            let promises = [];
+
+            for (let cropperId in croppers) {
+                const cropper = croppers[cropperId];
+                const fileInput = document.querySelector(`#${cropperId.replace('cropperContainer', 'image')}`);
+                const file = fileInput.files[0];
+
+                if (cropper) {
+                    promises.push(new Promise((resolve) => {
+                        cropper.getCroppedCanvas().toBlob(function (blob) {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(new File([blob], file.name));
+                            fileInput.files = dataTransfer.files;
+                            resolve();
+                        });
+                    }));
+                }
+            }
+
+            // Wait for all croppers to finish and then submit the form
+            Promise.all(promises).then(() => {
+                form.submit();  // Submit the form after cropping
+            });
+        }, 1500);  // Wait for SweetAlert to finish
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 {% endblock %}

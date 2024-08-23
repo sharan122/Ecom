@@ -47,7 +47,21 @@
     #submit-button:hover {
         background-color: #0056b3;
     }
+
+    /* Cropper container styling */
+    .cropper-container {
+        margin-bottom: 15px;
+    }
+
+    .cropper-container img {
+        max-width: 100%;
+    }
 </style>
+
+<!-- Include Cropper.js CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css">
+<script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+
 <div class="container-fluid">
     <h4 class="page-title">Product Form</h4>
 </div>
@@ -61,30 +75,160 @@
          {% include 'alerts/alert.html' %}
     </div>
     <div class="card-body">
-          <form action="{% url 'Product:edit_variant' variant.id %}"method="POST"enctype="multipart/form-data">
-    {% csrf_token %}
-    
-    <div class="mb-3"><label for="variantRam" class="form-label">RAM</label><select class="form-select" id="variantRam" name="ram"><option value="4" {% if variant.ram == 4 %}selected{% endif %}>4 GB</option><option value="6" {% if variant.ram == 6 %}selected{% endif %}>6 GB</option><option value="8" {% if variant.ram == 8 %}selected{% endif %}>8 GB</option><option value="12" {% if variant.ram == 12 %}selected{% endif %}>12 GB</option><option value="16" {% if variant.ram == 16 %}selected{% endif %}>16 GB</option></select></div><div class="mb-3"><label for="variantRom" class="form-label">ROM</label><select class="form-select" id="variantRom" name="rom"><option value="64" {% if variant.rom == 64 %}selected{% endif %}>64 GB</option><option value="128" {% if variant.rom == 128 %}selected{% endif %}>128 GB</option><option value="256" {% if variant.rom == 256 %}selected{% endif %}>256 GB</option><option value="512" {% if variant.rom == 512 %}selected{% endif %}>512 GB</option><option value="1024" {% if variant.rom == 1024 %}selected{% endif %}>1 TB</option></select></div><div class="mb-3"><label for="variantColor" class="form-label">Color</label><input type="text" pattern="[A-Za-z]+" class="form-control" id="variantColor" name="color" value="{{ variant.color }}"></div><div class="mb-3"><label for="variantQty" min="0" class="form-label">Quantity</label><input type="number" class="form-control" id="variantQty" name="qty" value="{{ variant.qty }}"></div><div class="mb-3"><label for="variantPrice" class="form-label" min="0">Price</label><input type="number" class="form-control" id="variantPrice" name="price" step="0.001" value="{{ variant.price }}"></div><!-- Image Fields --><div class="mb-3"><label for="image1" class="form-label">Image 1 (Optional):</label><input type="file" class="form-control" id="image1" name="image1" accept="image/*">
-        {% if variant.image1 %}
-            <img src="{{ variant.image1.url }}"alt="Image 1"class="img-thumbnail mt-2"width="150">
-        {% endif %}
-    </div><div class="mb-3"><label for="image2" class="form-label">Image 2 (Optional):</label><input type="file" class="form-control" id="image2" name="image2" accept="image/*">
-        {% if variant.image2 %}
-            <img src="{{ variant.image2.url }}"alt="Image 2"class="img-thumbnail mt-2"width="150">
-        {% endif %}
-    </div><div class="mb-3"><label for="image3" class="form-label">Image 3 (Optional):</label><input type="file" class="form-control" id="image3" name="image3" accept="image/*">
-        {% if variant.image3 %}
-            <img src="{{ variant.image3.url }}"alt="Image 3"class="img-thumbnail mt-2"width="150">
-        {% endif %}
-    </div><div class="mb-3"><label for="image4" class="form-label">Image 4 (Optional):</label><input type="file" class="form-control" id="image4" name="image4" accept="image/*">
-        {% if variant.image4 %}
-            <img src="{{ variant.image4.url }}"alt="Image 4"class="img-thumbnail mt-2"width="150">
-        {% endif %}
+        <form id="variantForm" action="{% url 'Product:edit_variant' variant.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="variantRam" class="form-label">RAM</label>
+                <select class="form-select" id="variantRam" name="ram">
+                    <option value="4" {% if variant.ram == 4 %}selected{% endif %}>4 GB</option>
+                    <option value="6" {% if variant.ram == 6 %}selected{% endif %}>6 GB</option>
+                    <option value="8" {% if variant.ram == 8 %}selected{% endif %}>8 GB</option>
+                    <option value="12" {% if variant.ram == 12 %}selected{% endif %}>12 GB</option>
+                    <option value="16" {% if variant.ram == 16 %}selected{% endif %}>16 GB</option>
+                </select>
+            </div>
 
+            <div class="mb-3">
+                <label for="variantRom" class="form-label">ROM</label>
+                <select class="form-select" id="variantRom" name="rom">
+                    <option value="64" {% if variant.rom == 64 %}selected{% endif %}>64 GB</option>
+                    <option value="128" {% if variant.rom == 128 %}selected{% endif %}>128 GB</option>
+                    <option value="256" {% if variant.rom == 256 %}selected{% endif %}>256 GB</option>
+                    <option value="512" {% if variant.rom == 512 %}selected{% endif %}>512 GB</option>
+                    <option value="1024" {% if variant.rom == 1024 %}selected{% endif %}>1 TB</option>
+                </select>
+            </div>
 
-    </div><button type="submit" class="btn btn-primary">Save changes</button></form>
+            <div class="mb-3">
+                <label for="variantColor" class="form-label">Color</label>
+                <input type="text" pattern="[A-Za-z]+" class="form-control" id="variantColor" name="color" value="{{ variant.color }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="variantQty" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="variantQty" name="qty" value="{{ variant.qty }}" min="0">
+            </div>
+
+            <div class="mb-3">
+                <label for="variantPrice" class="form-label">Price</label>
+                <input type="number" class="form-control" id="variantPrice" name="price" value="{{ variant.price }}" step="0.001" min="0">
+            </div>
+
+            <!-- Image Fields with Cropper -->
+            <div class="mb-3 cropper-container">
+                <label for="image1" class="form-label">Image 1 (Optional):</label>
+                <input type="file" class="form-control" id="image1" name="image1" accept="image/*" onchange="initializeCropper(this, 'cropperImage1')">
+                <div id="cropperContainer1">
+                    <img id="cropperImage1">
+                </div>
+                {% if variant.image1 %}
+                    <img src="{{ variant.image1.url }}" alt="Image 1" class="img-thumbnail mt-2" width="150">
+                {% endif %}
+            </div>
+
+            <div class="mb-3 cropper-container">
+                <label for="image2" class="form-label">Image 2 (Optional):</label>
+                <input type="file" class="form-control" id="image2" name="image2" accept="image/*" onchange="initializeCropper(this, 'cropperImage2')">
+                <div id="cropperContainer2">
+                    <img id="cropperImage2">
+                </div>
+                {% if variant.image2 %}
+                    <img src="{{ variant.image2.url }}" alt="Image 2" class="img-thumbnail mt-2" width="150">
+                {% endif %}
+            </div>
+
+            <div class="mb-3 cropper-container">
+                <label for="image3" class="form-label">Image 3 (Optional):</label>
+                <input type="file" class="form-control" id="image3" name="image3" accept="image/*" onchange="initializeCropper(this, 'cropperImage3')">
+                <div id="cropperContainer3">
+                    <img id="cropperImage3">
+                </div>
+                {% if variant.image3 %}
+                    <img src="{{ variant.image3.url }}" alt="Image 3" class="img-thumbnail mt-2" width="150">
+                {% endif %}
+            </div>
+
+            <div class="mb-3 cropper-container">
+                <label for="image4" class="form-label">Image 4 (Optional):</label>
+                <input type="file" class="form-control" id="image4" name="image4" accept="image/*" onchange="initializeCropper(this, 'cropperImage4')">
+                <div id="cropperContainer4">
+                    <img id="cropperImage4">
+                </div>
+                {% if variant.image4 %}
+                    <img src="{{ variant.image4.url }}" alt="Image 4" class="img-thumbnail mt-2" width="150">
+                {% endif %}
+            </div>
+
+            <button type="submit" id="submit-button" class="btn btn-primary">Save changes</button>
+        </form>
     </div>
 </div>
 
-</div>
+<script>
+    function initializeCropper(input, imageId) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const cropperImage = document.getElementById(imageId);
+                cropperImage.src = e.target.result;
+
+                // Initialize Cropper.js
+                const cropper = new Cropper(cropperImage, {
+                    aspectRatio: 1 / 1, // Adjust the aspect ratio as needed
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    scalable: false,
+                    crop(event) {
+                       
+                    },
+                });
+
+                
+                const form = document.getElementById('variantForm');
+                form.onsubmit = function (event) {
+                    event.preventDefault();
+                    cropper.getCroppedCanvas().toBlob(function (blob) {
+                        const fileInput = document.getElementById(input.id);
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(new File([blob], file.name));
+                        fileInput.files = dataTransfer.files;
+                        form.submit(); 
+                    });
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('variantForm').addEventListener('submit', function (event) {
+     
+        let image1 = document.getElementById('image1').files[0];
+
+        let acceptedTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/bmp',     
+            'image/webp',     
+            'image/tiff',      
+            'image/svg+xml',   
+            'image/x-icon', 
+            'image/heic',      
+            'image/heif'       
+        ];
+
+   
+        if (image1 && !acceptedTypes.includes(image1.type)) {
+            alert("Image 1 must be a valid image (JPEG, PNG, or GIF).");
+            event.preventDefault();
+            return false;
+        }
+
+        
+    });
+</script>
 {% endblock %}

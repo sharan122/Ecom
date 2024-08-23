@@ -1,14 +1,15 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .models import Brand
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
 import re
-
+from Product.views import is_staff
 
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def brands_list(request):
     brands=Brand.objects.all()
     context={'brands':brands}
@@ -16,6 +17,7 @@ def brands_list(request):
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def create_brand(request):
     if request.method == "POST":
         brand_name = request.POST.get('brand_name')
@@ -47,7 +49,10 @@ def create_brand(request):
         return redirect('Product:brand_list')  # Redirect to a relevant page after successful creation
 
     return render(request, 'brand/create_brands.html')
- 
+
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def edit_brand(request,id):
     brand_id=get_object_or_404(Brand,id=id)
     context={'brand_id':brand_id}
@@ -87,7 +92,10 @@ def edit_brand(request,id):
         return redirect('Brands:brands_list')
     return render(request,'brand/edit_brands.html',context)
  
- 
+
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def block_brand(request, id):
     brand = get_object_or_404(Brand, id=id)
     brand.status = not brand.status

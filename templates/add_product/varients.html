@@ -35,61 +35,64 @@
 
 
 
-                            <tbody>
-                                {% for product in products%}
-                              
-                                <a href=""><tr onclick="window.location.href='{% url 'Product:varient_details' product.id %}';">
-                                    <td>{{ product.p_id.id }}</td>
-                                    <td>{{ product.p_id.name }}</td>
 
-                                    <td>
-                                        <div class="image-container">
-                                            <img src="{{ product.image1.url }}" alt="Product Image">
-                                        </div>
-                                    </td>
+                                    <tbody>
+                                        {% for product in products %}
+                                        <tr>
+                                            <td> {{ product.p_id.id }}</td>
+                                            <td><a href="{% url 'Product:varient_details' product.id %}">{{ product.p_id.name }}</a></td>
+                                            <td>
+                                                <div class="image-container">
+                                                    <img src="{{ product.image1.url }}" alt="Product Image">
+                                                </div>
+                                            </td>
+                                            <td>{{ product.p_id.brand.brand_name }}</td>
+                                            <td>{{ product.qty }}</td>
+                                            <td>{{ product.ram }}</td>
+                                            <td>{{ product.rom }}</td>
+                                            <td>{{ product.price }}</td>
 
-                                    <td>{{ product.p_id.brand.brand_name }}</td>
+                                            {% if product.status %}
+                                            <td><span class="glyphicon">&#xe013;</span></td>
+                                            {% else %}
+                                            <td><span class="glyphicon">&#xe014;</span></td>
+                                            {% endif %}
 
-                                    <td>{{ product.qty }}</td>
-                                    <td>{{ product.ram }}</td>
-                                    <td>{{ product.rom }}</td>
-                                    <td>{{ product.price }}</td>
-                                    {% if product.status %}
-                                    <td> <span class="glyphicon">&#xe013;</span></td>
-                                    {% else %}
-                                    <td><span class="glyphicon">&#xe014;</span></td>
-                                    {% endif %}
-                                    
-                                        {% if product.status %}
-                                    <td><a href="{% url 'Product:block_varient' product.id %}"><span
-                                                class="badge badge-danger">Deactivate</span></a></td>
-                                    {% else %}
-                                    <td><a href="{% url 'Product:block_varient' product.id %}"><span
-                                                class="badge badge-success">Activate</span></a></td>
-                                    {% endif %}
+                                            {% if product.status %}
+                                            <td>
+                                                <a href="#" class="deactivate-button"
+                                                    data-url="{% url 'Product:block_varient' product.id %}">
+                                                    <span class="badge badge-danger">Deactivate</span>
+                                                </a>
+                                            </td>
+                                            {% else %}
+                                            <td>
+                                                <a href="#" class="activate-button"
+                                                    data-url="{% url 'Product:block_varient' product.id %}">
+                                                    <span class="badge badge-success">Activate</span>
+                                                </a>
+                                            </td>
+                                            {% endif %}
 
-                                 
-                                    <td>
-                                        <a href="{% url 'Product:edit_variant' product.id%}"> <button class="btn btn-status btn-success">Edit</button></a> 
-                                    </td>
+                                            <td>
+                                                <a href="{% url 'Product:edit_variant' product.id%}">
+                                                    <button class="btn btn-status btn-success">Edit</button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
 
-
-
-                                </tr> </a>
-                                            
-
-                            </tbody>
-
-                            {% endfor%}
+                             
 
 
                         </table>
-                 
-                       
+
+
                         <a href="{% url 'Product:add_new_varient' product.id %}">
                             <button class="btn btn-status btn-success">Add Variant</button>
                         </a>
-                 
+
                     </div>
 
 
@@ -100,5 +103,32 @@
 
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Handle deactivation and activation buttons
+    document.querySelectorAll('.deactivate-button, .activate-button').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const url = this.getAttribute('data-url');
+            const action = this.classList.contains('deactivate-button') ? 'block' : 'activate';
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: `You want to ${action} this variant?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Trigger the action by redirecting to the Django view
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}

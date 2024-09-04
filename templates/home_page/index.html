@@ -10,7 +10,7 @@
                     <div class="hero-content">
                         <h6>asoss</h6>
                         <h2 style="color: aliceblue;">New Collection</h2>
-                        <a href="#" class="btn essence-btn">Shop Now </a>
+                        <a  href="{% url 'Product:explore'%}" class="btn essence-btn">Shop Now </a>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="cta-content bg-img background-overlay">
-                        <div class="h-100 d-flex align-items-center justify-content-end"
+                        <div class="h-100 d-flex align-items-center justify-content-end img-fluid"
                             style="background-image: url({% static 'img/bg-img/banner.jpg' %}); background-size: cover;">
                             <div class="cta--text">
                                 <h6>-60%</h6>
@@ -116,7 +116,7 @@
                                  {% if product.qty > 0 %}
                                     <!-- Add to Cart -->
                                     <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
+                                        <button type="button" class="addToCartButton btn essence-btn" data-variant-id="{{ product.id }}">Add To Cart</button>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -160,5 +160,65 @@
             <img src="img/core-img/brand6.png" alt="">
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// Function to get CSRF token from the cookies
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
+document.querySelectorAll('.addToCartButton').forEach(button => {
+    button.addEventListener('click', function() {
+        const variantId = this.getAttribute('data-variant-id');
+        
+        fetch('{% url "Cart:add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken') // Add CSRF token
+            },
+            body: new URLSearchParams({
+                'variant_id': variantId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                if (data.redirect) {
+                    window.location.href = data.redirect; // Redirect to login if unauthenticated
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+</script>
     {% endblock %}

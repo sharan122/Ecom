@@ -1,0 +1,48 @@
+{% extends "profile_base/profile_base.html" %}
+{% block header %} <h2>Orders</h2>{% endblock %}
+{% block profile_base %}
+<div class="col-md-9 mt-5 mx-auto ">
+{% for item in items %}
+                <div class="card mt-2 mb-3">
+                    <div class="card-body">
+                       <div class ="d-flex ">
+                       <div class="image-container" style="width: 90px; height :90px;">
+                            <img src="{{ item.product_id.image1.url }}" alt="Product Image">
+                        </div>
+                        <div class="mx-auto my-auto">
+                        <h6> {{item.product_id.p_id.name}}</h6>
+                        Colour: <span>{{item.product_id.color}}</span>
+                        </div>
+                        <div class="mx-auto my-auto">
+                        
+                         {{item.qty}} Item  
+                        </div>
+                        <div class="mx-auto my-auto">
+                         
+                        ₹ {{item.total_price}}
+                        </div>
+                        <div class="mx-auto my-auto">
+                         
+                        Order placed at {{item.order_id.created_at}}
+                        </div>
+                        {% if item.status == "Order Placed" or item.status == "Shipped" or item.status == "Delivered"%}
+                        <div class="mx-auto my-auto text-success">
+                         {{item.status}}
+                        </div>
+                        {% endif %}
+                        {% if item.status == "Order Cancelled !" %}
+                        <div class="mx-auto my-auto text-danger">
+                         {{item.status}}
+                        </div>
+                        {% endif %}
+                       </div>
+                        <div class="mt-3">
+                            <a href="{% url 'Order:user_order_details' item.id %}" class="card-link">View Details</a>
+                           
+                        </div>
+            
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+{% endblock %}

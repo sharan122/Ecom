@@ -48,15 +48,10 @@
         background-color: #0056b3;
     }
 </style>
-<div class="container-fluid">
-    <h4 class="page-title">Product Form</h4>
-</div>
 
-<div class="col-md-8 offset-md-2">
+
+<div class="col-md-8 mx-auto">
     
-        <div class="card-header">
-            <div class="container"><h1>Edit Brand</h1></div>
-        </div>
         {% include 'alerts/alert.html' %}
         <div class="card-body">
             <form id="variantForm" method="POST" action="{% url 'Brands:edit_brand' brand_id.id %}" enctype="multipart/form-data">
@@ -66,7 +61,7 @@
                 <label for="name">Brand Name:</label>
                 <input type="text" name="brand_name" id="name" placeholder="Brand Name" value="{{brand_id.brand_name}}" required>
             
-                <button type="submit" id="submit-button">Add Brand</button>
+                <button type="submit" id="submit-button">Change Name</button>
             </form>
             </div>
         </div>

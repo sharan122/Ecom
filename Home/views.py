@@ -8,8 +8,6 @@ from Product.views import is_staff
 # Create your views here.
 
 def user_home(request):
-    if not request.user.is_active:
-        return redirect('Accounts:user_login')
     products=variant.objects.all()
     context={'products':products}
     return render(request,"home_page/index.html",context)

@@ -1,0 +1,222 @@
+{% extends "user_base/user_base.html" %}
+{% load static %}
+
+{% block user_base %}
+<style>
+
+    .hr-text {
+        border: none;
+        border-top: 1px solid #ccc;
+        color: #666;
+        text-align: center;
+        height: 1px;
+        margin: 20px 0;
+        position: relative;
+    }
+    
+    .hr-text::before {
+        content: attr(data-content);
+        background: #fff;
+        padding: 0 10px;
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #666;
+    }
+
+</style>
+    <div class="breadcumb_area bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>Checkout</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout_area section-padding-80">
+        {% include 'alerts/alert.html' %}
+        <div class="container">
+            <div class="row">
+
+                <div class="col-12 col-md-6">
+                    <div class="checkout_details_area  clearfix">
+
+                        <div class="cart-page-heading mb-30">
+                            <h5>Billing Address</h5>
+                        </div>
+                        <form  method="POST" action="{% url 'Order:place_order' %}">
+
+                    <div class="container">
+                        <div class="row">
+                    {% for address in addresses %}
+                            <!-- Address Card 1 -->
+                            <div class="col-md-4 col-sm-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ address.name }}</h5>
+                                            <p class="card-text">
+                                              {{address.address}}<br>
+                                              {{address.pincode}}
+                                            </p>
+                                          <input type="radio" name="existing_address_id" value="{{ address.id }}" id="">
+                                                    <label for="">Use this</label>
+                             </div>
+                            </div>
+                        </div>
+       
+                    {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <hr class="hr-text" data-content="or">
+                    </div>
+
+
+
+             {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="first_name">Name <span>*</span></label>
+                    <input type="text" class="form-control" name="name" value="" >
+                </div>
+                
+                
+                <div class="col-12 mb-3">
+                    <label for="state">State <span>*</span></label>
+                    <select class="w-100 " name="state" style="height: 150px; overflow-y: scroll;">
+                        <option value="andhra_pradesh">Select state</option>
+                        <option value="andhra_pradesh">Andhra Pradesh</option>
+                        <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                        <option value="assam">Assam</option>
+                        <option value="bihar">Bihar</option>
+                        <option value="chhattisgarh">Chhattisgarh</option>
+                        <option value="goa">Goa</option>
+                        <option value="gujarat">Gujarat</option>
+                        <option value="haryana">Haryana</option>
+                        <option value="himachal_pradesh">Himachal Pradesh</option>
+                        <option value="jharkhand">Jharkhand</option>
+                        <option value="karnataka">Karnataka</option>
+                        <option value="kerala">Kerala</option>
+                        <option value="madhya_pradesh">Madhya Pradesh</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="manipur">Manipur</option>
+                        <option value="meghalaya">Meghalaya</option>
+                        <option value="mizoram">Mizoram</option>
+                        <option value="nagaland">Nagaland</option>
+                        <option value="odisha">Odisha</option>
+                        <option value="punjab">Punjab</option>
+                        <option value="rajasthan">Rajasthan</option>
+                        <option value="sikkim">Sikkim</option>
+                        <option value="tamil_nadu">Tamil Nadu</option>
+                        <option value="telangana">Telangana</option>
+                        <option value="tripura">Tripura</option>
+                        <option value="uttar_pradesh">Uttar Pradesh</option>
+                        <option value="uttarakhand">Uttarakhand</option>
+                        <option value="west_bengal">West Bengal</option>
+                    </select>
+                </div>
+
+
+
+
+
+
+                
+                <div class="col-12 mt-3 mb-3">
+                    <label for="postcode" >Pincode <span>*</span></label>
+                    <input type="text" name="pincode" class="form-control" id="postcode" value="">
+                </div>
+                
+
+
+
+                
+                <div class="col-12 mb-3">
+                    <label for="city">Town/City <span>*</span></label>
+                    <input type="text" class="form-control" name="city" id="city" value="">
+                </div>
+                
+                
+                <div class="col-12 mb-4">
+                    <label for="email_address">Email Address <span>*</span></label>
+                    <input type="email" name="email" class="form-control" id="email_address" value="">
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="phone_number">Phone No <span>*</span></label>
+                    <input type="number" class="form-control" name="phone" id="phone_number" min="0" value="">
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="street_address">Address <span>*</span></label>
+                    <input type="text" class="form-control h-100 mb-3" name="address" id="street_address" value="">
+                    
+                </div>
+                
+                
+                <div class="col-12 mt-3 ">
+                    <label for="city">Landmark<span> (optional)</span></label>
+                    <input type="text" class="form-control" name="landmark" id="city" value="">
+                </div>
+                
+            </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
+                    <div class="order-details-confirmation">
+
+                        <div class="cart-page-heading">
+                            <h5>Your Order</h5>
+                            <p>The Details</p>
+                        </div>
+
+                        <ul class="order-details-form mb-4">
+                            <li><span>Product</span> <span>Total</span></li>
+                            
+                           
+                            {% for item, total in items_with_totals %}
+                                <li>
+                                    <span>{{ item.product.p_id.name }} <span style="color:#FB0544;">x {{item.qty}}</span></span>
+                                    <span>{{ total }}</span>
+                                </li>
+                                {% endfor %}                       
+                                                        
+                            
+                            <li><span>Shipping</span> <span></span></li>
+                            <li><span>Total</span> <span>{{subtotal}}</span></li>
+                        </ul>
+
+                        <div id="accordion" role="tablist" class="mb-4">
+                            <div class="card">
+                                <div class="card-header" role="tab" id="headingOne">
+                                    <h6 class="mb-0">
+                                                    <input type="radio" name="payment_method" value="COD" required>
+                                                    <label for="payment_method">Cash on delivery</label>
+                                                </h6>
+                                </div>
+
+                                
+                            </div>
+                            
+                            
+                        </div>
+
+            <input type="submit" value="Place Order" class="btn essence-btn mt-3 mb-3"> 
+                       
+                    </div>
+                </div>
+
+
+        </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

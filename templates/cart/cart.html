@@ -2,4 +2,381 @@
 {% load static %}
 
 {% block user_base %}
+<!-- jQuery CDN -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    }
+
+    .card {
+        margin-top;
+        max-width: 950px;
+        width: 90%;
+        box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+        border: transparent;
+    }
+
+    @media(max-width:767px) {
+        .card {
+            margin: 3vh auto;
+        }
+    }
+
+    .cart {
+        background-color: #fff;
+        padding: 4vh 5vh;
+        border-bottom-left-radius: 0rem;
+        border-top-left-radius: 0rem;
+    }
+
+    @media(max-width:767px) {
+        .cart {
+            padding: 4vh;
+            border-bottom-left-radius: unset;
+            border-top-right-radius: 1rem;
+        }
+    }
+
+    .summary {
+        background-color: #ddd;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        padding: 4vh;
+        color: rgb(65, 65, 65);
+    }
+
+    @media(max-width:767px) {
+        .summary {
+            border-top-right-radius: unset;
+            border-bottom-left-radius: 1rem;
+        }
+    }
+
+    .summary .col-2 {
+        padding: 0;
+    }
+
+    .summary .col-10 {
+        padding: 0;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .title b {
+        font-size: 1.5rem;
+    }
+
+    .main {
+        margin: 0;
+        padding: 2vh 0;
+        width: 100%;
+    }
+
+    .col-2,
+    .col {
+        padding: 0 1vh;
+    }
+
+    a {
+        padding: 0 1vh;
+    }
+
+    .close {
+        margin-left: auto;
+        font-size: 0.7rem;
+        
+    }
+
+    img {
+        width: 3.5rem;
+    }
+
+    .back-to-shop {
+        margin-top: 4.5rem;
+    }
+
+    h5 {
+        margin-top: 4vh;
+    }
+
+    hr {
+        margin-top: 1.25rem;
+    }
+
+    form {
+        padding: 2vh 0;
+    }
+
+    select {
+        border: 1px solid rgba(0, 0, 0, 0.137);
+        padding: 1.5vh 1vh;
+        margin-bottom: 4vh;
+        outline: none;
+        width: 100%;
+        background-color: rgb(247, 247, 247);
+    }
+
+    input {
+        border: 1px solid rgba(0, 0, 0, 0.137);
+        padding: 1vh;
+        margin-bottom: 4vh;
+        outline: none;
+        width: 100%;
+        background-color: rgb(247, 247, 247);
+    }
+
+    input:focus::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    .btn {
+        background-color: #000;
+        border-color: #000;
+        color: white;
+        width: 100%;
+        font-size: 0.7rem;
+        margin-top: 4vh;
+        padding: 1vh;
+        border-radius: 0;
+    }
+
+    .btn:focus {
+        box-shadow: none;
+        outline: none;
+        box-shadow: none;
+        color: white;
+        -webkit-box-shadow: none;
+        -webkit-user-select: none;
+        transition: none;
+    }
+
+    .btn:hover {
+        color: white;
+    }
+
+    a {
+        color: black;
+    }
+
+    a:hover {
+        color: black;
+        text-decoration: none;
+    }
+
+    #code {
+        background-image: linear-gradient(to left, rgba(255, 255, 255, 0.253), rgba(255, 255, 255, 0.185)), url("https://img.icons8.com/small/16/000000/long-arrow-right.png");
+        background-repeat: no-repeat;
+        background-position-x: 95%;
+        background-position-y: center;
+    }
+</style>
+
+<div class="breadcumb_area bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="page-title text-center">
+                    <h2>Cart</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'alerts/alert.html' %}
+<div class="card">
+    <div class="row">
+        <div class="col-md-8 cart">
+            <div class="title">
+                <div class="row">
+                    <div class="col">
+                        <h4><b>Shopping Cart</b></h4>
+                    </div>
+                    {% if qty %}
+                        <div class="col align-self-center text-right text-muted">{{ qty.total }} items</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if not products %}
+                <div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+                    <div class="col text-center">
+                        <h4><b>Cart is Empty</b></h4>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row border-top border-bottom">
+                    {% for product in products %}
+                        <div class="row main align-items-center">
+                            <div class="col-2">
+                                <img class="img-fluid" src="{{ product.product.image1.url }}" alt="Product Image">
+                            </div>
+                            <div class="col">
+                                <div class="row text-muted">{{ product.product.p_id.brand.brand_name }}</div>
+                                <div class="row">{{ product.product.p_id.name }}</div>
+                            </div>
+                            <div class="col">
+                                <button class="qty-button" data-product-id="{{ product.product_id }}" data-action="decrease">-</button>
+                                <span class="border" id="quantity-{{ product.product_id }}">{{ product.qty }}</span>
+                                <button class="qty-button" data-product-id="{{ product.product_id }}" data-action="increase">+</button>
+                            </div>
+                            <div class="col" id="total-{{ product.product_id }}" data-price="{{ product.product.price }}">
+                                ₹ {{ product.product.price }}
+                            </div>
+                            <div>
+                                <a href="{% url 'Cart:remove_item' product.id %}">
+                                    <span class="closeb">&#10005;</span>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="back-to-shop">
+                <a href="#">&leftarrow;</a><span class="text-muted">Back to shop</span>
+            </div>
+        </div>
+        <div class="col-md-4 summary">
+            <div>
+                <h5><b>Summary</b></h5>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col" style="padding-left:0;">ITEMS {{ qty.total }}</div>
+            </div>
+            <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                <div class="col">SUBTOTAL</div>
+                <div id="subtotal">₹ 0.00</div>
+            </div>
+            <a class="btn" href ="{% url 'Cart:check_out' %}">CHECKOUT</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Function to get CSRF token from a cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    
+        // Function to update the total price of a single product
+        function updateTotalPrice(productId, pricePerItem, newQuantity) {
+            var newTotal = pricePerItem * newQuantity;
+            $('#total-' + productId).text('₹ ' + newTotal);
+            // Ensure the close button is not affected
+            var closeButton = $('#close-' + productId);
+            closeButton.detach(); // Temporarily remove the close button
+            $('#total-' + productId).append(closeButton);    var closeButton = $('#close-' + productId);
+            closeButton.detach(); // Temporarily remove the close button
+            $('#total-' + productId).append(closeButton);  // Re-attach it after updating
+        }
+    
+        // Function to update the subtotal
+        function updateSubtotal() {
+            var subtotal = 0;
+            $('.col').each(function() {
+                var priceText = $(this).text().replace('₹ ', '').replace(',', '');
+                var price = parseFloat(priceText);
+                if (!isNaN(price)) {
+                    subtotal += price;
+                }
+            });
+            $('#subtotal').text('₹ ' + subtotal.toFixed(2));
+        }
+    
+        // Setup AJAX to include the CSRF token in the header
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+    
+        // Handle quantity button clicks
+        $(document).on('click', '.qty-button', function (e) {
+            e.preventDefault(); // Prevent default button behavior
+    
+            var productId = $(this).data('product-id'); // Get the product ID from the data attribute
+            var action = $(this).data('action'); // Get the action (increase or decrease) from the data attribute
+    
+            $.ajax({
+                url: '{% url "Cart:update_qty" %}',
+                type: 'POST',
+                data: {
+                    'action': action,
+                    'productid': productId
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        var pricePerItem = parseFloat($('#total-' + productId).data('price'));
+                        var newQuantity = response.new_quantity;
+    
+                        // Update the quantity in the UI
+                        $('#quantity-' + productId).text(newQuantity);
+    
+                        // Update the total price for the item
+                        updateTotalPrice(productId, pricePerItem, newQuantity);
+    
+                        // Update the subtotal
+                        updateSubtotal();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    console.log("AJAX Error Response:", xhr);
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: response.message || 'An error occurred!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    } catch (e) {
+                        console.error("Error parsing response JSON:", e);
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: 'An unknown error occurred!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+                }
+            });
+        });
+    
+        // Initial calculation on page load
+        $('.row.main').each(function() {
+            var productId = $(this).find('.col').last().attr('id').split('-')[1];
+            var pricePerItem = parseFloat($('#total-' + productId).data('price'));
+            var quantity = parseFloat($('#quantity-' + productId).text());
+            updateTotalPrice(productId, pricePerItem, quantity);
+        });
+    
+        updateSubtotal();
+    });
+    
+</script>
+
 {% endblock %}

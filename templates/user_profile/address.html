@@ -1,0 +1,111 @@
+{% extends "profile_base/profile_base.html" %}
+{% block header %} <h2>Address</h2>{% endblock %}
+{% block profile_base %}
+
+<style>
+    #state {
+        height: 150px; /* Set a fixed height */
+        overflow-y: scroll; /* Make it scrollable */
+    }
+</style>
+<div class="col-12 col-md-6">
+    {% include 'alerts/alert.html' %}
+    <div class="checkout_details_area mt-50 clearfix">
+
+        <div class="cart-page-heading mb-30">
+            <h5>Address</h5>
+        </div>
+
+        <form  method="POST" action="{% url 'Users:new_address'%}">
+             {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="first_name">Name <span>*</span></label>
+                    <input type="text" class="form-control" name="name" value="" required>
+                </div>
+                
+                
+                <div class="col-12 mb-3">
+                    <label for="state">State <span>*</span></label>
+                    <select class="w-100 " name="state" style="height: 150px; overflow-y: scroll;">
+                        <option value="andhra_pradesh">Select state</option>
+                        <option value="andhra_pradesh">Andhra Pradesh</option>
+                        <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                        <option value="assam">Assam</option>
+                        <option value="bihar">Bihar</option>
+                        <option value="chhattisgarh">Chhattisgarh</option>
+                        <option value="goa">Goa</option>
+                        <option value="gujarat">Gujarat</option>
+                        <option value="haryana">Haryana</option>
+                        <option value="himachal_pradesh">Himachal Pradesh</option>
+                        <option value="jharkhand">Jharkhand</option>
+                        <option value="karnataka">Karnataka</option>
+                        <option value="kerala">Kerala</option>
+                        <option value="madhya_pradesh">Madhya Pradesh</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="manipur">Manipur</option>
+                        <option value="meghalaya">Meghalaya</option>
+                        <option value="mizoram">Mizoram</option>
+                        <option value="nagaland">Nagaland</option>
+                        <option value="odisha">Odisha</option>
+                        <option value="punjab">Punjab</option>
+                        <option value="rajasthan">Rajasthan</option>
+                        <option value="sikkim">Sikkim</option>
+                        <option value="tamil_nadu">Tamil Nadu</option>
+                        <option value="telangana">Telangana</option>
+                        <option value="tripura">Tripura</option>
+                        <option value="uttar_pradesh">Uttar Pradesh</option>
+                        <option value="uttarakhand">Uttarakhand</option>
+                        <option value="west_bengal">West Bengal</option>
+                    </select>
+                </div>
+
+
+
+
+
+
+                
+                <div class="col-12 mt-3 mb-3">
+                    <label for="postcode" >Pincode <span>*</span></label>
+                    <input type="text" name="pincode" class="form-control" id="postcode" value="">
+                </div>
+                
+
+
+
+                
+                <div class="col-12 mb-3">
+                    <label for="city">Town/City <span>*</span></label>
+                    <input type="text" class="form-control" name="city" id="city" value="">
+                </div>
+                
+                
+                <div class="col-12 mb-4">
+                    <label for="email_address">Email Address <span>*</span></label>
+                    <input type="email" name="email" class="form-control" id="email_address" value="">
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="phone_number">Phone No <span>*</span></label>
+                    <input type="number" class="form-control" name="phone" id="phone_number" min="0" value="">
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="street_address">Address <span>*</span></label>
+                    <input type="text" class="form-control h-100 mb-3" name="address" id="street_address" value="">
+                    
+                </div>
+                
+                
+                <div class="col-12 mt-3 ">
+                    <label for="city">Landmark<span> (optional)</span></label>
+                    <input type="text" class="form-control" name="landmark" id="city" value="">
+                </div>
+                
+            </div>
+            <input type="submit" class="btn essence-btn mt-3 mb-3"> 
+        </form>
+    </div>
+</div>
+{% endblock %}

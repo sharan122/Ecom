@@ -3,13 +3,14 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import  HttpResponseRedirect
 from .models import CustomUser 
-from django.contrib.auth import authenticate,login,logout 
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 import random
 from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import timedelta
 from django.utils.dateparse import parse_datetime
 import re
+from django.contrib.auth.decorators import login_required   
 
 
 # user login view
@@ -139,7 +140,8 @@ def verify_otp(request):
                     email=request.session['email'],
                     phone_no=request.session['phone'],
                     password=request.session['password'],
-                    is_active=True
+                    is_active=True,
+                    signup_method = 'default'
                 )
                 user.save()
                 request.session.flush()
@@ -206,3 +208,44 @@ def logout_user(request):
 def logout_admin(request):
     logout(request)
     return redirect('Accounts:admin_login')
+
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if not request.user.check_password(old_password):
+            messages.error(request, 'Your old password was entered incorrectly. Please try again.')
+        elif new_password != confirm_password:
+            messages.error(request, 'The new passwords do not match. Please try again.')
+        elif len(new_password) < 8:
+            messages.error(request, 'The new password must be at least 8 characters long.')
+        else:
+            request.user.set_password(new_password)
+            request.user.save()
+            update_session_auth_hash(request, request.user) 
+            messages.success(request, 'Your password has been successfully updated!')
+            return redirect('Accounts:change_password')
+
+    return render(request, 'user_profile/change_password.html')
+
+def set_password(request):
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('con_password')
+        if len(new_password) < 8:
+            messages.error(request, 'The new password must be at least 8 characters long.')
+        elif new_password != confirm_password:
+            messages.error(request, 'The new passwords do not match. Please try again.')
+        
+        request.user.set_password(new_password)
+        request.user.signup_method='default'
+        request.user.username= request.user.email
+        request.user.save()
+        messages.success(request, 'Your password has been successfully updated!') 
+        return redirect('Accounts:set_password')
+    return render(request, 'user_profile/set_password.html')

@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block user_base %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .variant-mini-card {
         display: flex;
@@ -24,19 +26,38 @@
         margin: 0;
         font-size: 14px;
     }
+    .product-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Show only 3 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .show-more {
+        -webkit-line-clamp: unset; /* Remove line clamp */
+        overflow: visible; /* Show entire content */
+    }
+    .single_product_thumb .product_thumbnail_slides img {
+        transition: transform 0.3s ease;
+    }
+    
+    .single_product_thumb .product_thumbnail_slides img:hover {
+        transform: scale(1.50); /* Slightly enlarge the image on hover */
+    }
 </style>
-
+{% csrf_token %}
 <section class="single_product_details_area d-flex align-items-center">
     <!-- Single Product Thumb -->
     <div class="single_product_thumb clearfix">
-        <div class="product_thumbnail_slides ">
-            <img src="{{ varients.image1.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
-            <img src="{{ varients.image2.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
+        <div class="product_thumbnail_slides " >
+            <img src="{{ varients.image1.url }}" alt="">
+            <img src="{{ varients.image2.url }}" alt="">
             {% if  varients.image3 %}
-            <img src="{{ varients.image3.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
+            <img src="{{ varients.image3.url }}" alt="">
             {% endif %}
              {% if  varients.image4 %}
-            <img src="{{ varients.image4.url }}" alt="" style="width: 60vw; height: 70vh;  object-fit: contain;">
+            <img src="{{ varients.image4.url }}" alt="">
              {% endif %}
         </div>
     </div>
@@ -50,16 +71,19 @@
         <p class="product-price"><span class="old-price">$65.00</span>₹ {{varients.price}}</p>
 
 
-        {% if varients.qty <= 0 or varients.status == False  %} <div class="product-badge offer-badge"
+        {% if varients.qty <= 0 %} <div class="product-badge offer-badge"
             style="background-color: #FF0000; width:105px; padding-left:1px">
             <span style="color: #FFF;">Out of Stock</span>
     </div>
-    {% else %}
+    {% elif varients.status == True %}
     <span>{{ varients.qty}} Stockes available</span>
     {% endif %}
 
 
-    <p class="product-desc">{{varients.p_id.description}}</p>
+    <p class="product-desc" id="productDesc">{{ varients.p_id.description }}</p>
+    <a href="javascript:void(0);" id="readMore" onclick="toggleReadMore()" >Read More</a>
+    <hr style=" border: none;">
+    
 
     <!-- Form -->
     <form class="cart-form clearfix" method="post">
@@ -77,7 +101,7 @@
 
 
             {% if varients.qty > 0 and  varients.status == True  %}
-            <button type="submit" name="addtocart" value="5" class="btn essence-btn">Buy Now</button>
+            <button type="button" id="addToCartButton" data-variant-id="{{ varients.id }}" class="btn essence-btn">Add To Cart</button>
             {% endif %}
             <!-- Favourite -->
             <div class="product-favourite ml-4">
@@ -85,15 +109,11 @@
             </div>
         </div>
 
-        {% if varients.qty > 0 and varients.status == True  %}
-        <button type="submit" name="addtocart" value="5" class="btn essence-btn"
-            style="margin-top: 10px;background-color:chartreuse;  ">Add to cart</button>
-        {% endif %}
-
+            {% for i in  varient_list %}
+            {% if i != varients%}
         <div style="margin-top: 50px;">
             <h2 style="font-size: 130%;">OTHER VARIENTS</h2>
         </div>
-            {% for i in  varient_list %}
         <a href="{% url 'Product:signle_product' i.id %}"> <div class="variant-mini-card mb-3">
 
             <img src="{{ i.image1.url }}" alt="Variant Image" class="mini-variant-image">
@@ -103,6 +123,7 @@
             </div>
         </div>
     </a> 
+    {% endif %}
         {% endfor %}
 
         <div style="margin-top: 50px;">
@@ -198,5 +219,87 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById('addToCartButton').addEventListener('click', function() {
+    const variantId = this.getAttribute('data-variant-id');
+    
+    fetch('{% url "Cart:add_to_cart" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken') // Add CSRF token
+        },
+        body: new URLSearchParams({
+            'variant_id': variantId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+            if (data.success) {
+                Swal.fire({
+                position: "center",
+                icon: "success",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+            
+                });
+               
+            
+                  // Display success message
+            } else {
+                
+                Swal.fire({
+                position: "center",
+                icon: "info",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+            });
+             if (data.redirect) {
+                    window.location.href = data.redirect; // Redirect to login if unauthenticated
+                }
+           
+            }
+        
+        })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    
+    // Function to get CSRF token from the cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+
+<script>
+    function toggleReadMore() {
+        var content = document.getElementById("productDesc");
+        var readMoreLink = document.getElementById("readMore");
+    
+        // Toggle the show-more class
+        if (content.classList.contains("show-more")) {
+            content.classList.remove("show-more");
+            readMoreLink.innerHTML = "Read More";
+        } else {
+            content.classList.add("show-more");
+            readMoreLink.innerHTML = "Read Less";
+        }
+    }
+    
+</script>
 
 {% endblock %}

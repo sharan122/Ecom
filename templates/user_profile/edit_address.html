@@ -1,0 +1,110 @@
+{% extends "profile_base/profile_base.html" %}
+{% block header %} <h2>Edit Address</h2>{% endblock %}
+{% block profile_base %}
+
+<style>
+    #state {
+        height: 150px; /* Set a fixed height */
+        overflow-y: scroll; /* Make it scrollable */
+    }
+</style>
+<div class="col-12 col-md-6">
+    <div class="checkout_details_area mt-50 clearfix">
+
+        <div class="cart-page-heading mb-30">
+            <h5>Address</h5>
+        </div>
+
+        <form  method="POST" action="{% url 'Users:edit_address' address.id %}">
+             {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="first_name">Name <span>*</span></label>
+                    <input type="text" class="form-control" name="name" value="{{address.name}}" required>
+                </div>
+                
+                
+                <div class="col-12 mb-3">
+                    <label for="state">State <span>*</span></label>
+                    <select class="w-100" name="state" style="height: 150px; overflow-y: scroll;">
+                        <option value="">Select state</option>
+                        <option value="andhra_pradesh" {% if address.state == 'andhra_pradesh' %}selected{% endif %}>Andhra Pradesh</option>
+                        <option value="arunachal_pradesh" {% if address.state == 'arunachal_pradesh' %}selected{% endif %}>Arunachal Pradesh</option>
+                        <option value="assam" {% if address.state == 'assam' %}selected{% endif %}>Assam</option>
+                        <option value="bihar" {% if address.state == 'bihar' %}selected{% endif %}>Bihar</option>
+                        <option value="chhattisgarh" {% if address.state == 'chhattisgarh' %}selected{% endif %}>Chhattisgarh</option>
+                        <option value="goa" {% if address.state == 'goa' %}selected{% endif %}>Goa</option>
+                        <option value="gujarat" {% if address.state == 'gujarat' %}selected{% endif %}>Gujarat</option>
+                        <option value="haryana" {% if address.state == 'haryana' %}selected{% endif %}>Haryana</option>
+                        <option value="himachal_pradesh" {% if address.state == 'himachal_pradesh' %}selected{% endif %}>Himachal Pradesh</option>
+                        <option value="jharkhand" {% if address.state == 'jharkhand' %}selected{% endif %}>Jharkhand</option>
+                        <option value="karnataka" {% if address.state == 'karnataka' %}selected{% endif %}>Karnataka</option>
+                        <option value="kerala" {% if address.state == 'kerala' %}selected{% endif %}>Kerala</option>
+                        <option value="madhya_pradesh" {% if address.state == 'madhya_pradesh' %}selected{% endif %}>Madhya Pradesh</option>
+                        <option value="maharashtra" {% if address.state == 'maharashtra' %}selected{% endif %}>Maharashtra</option>
+                        <option value="manipur" {% if address.state == 'manipur' %}selected{% endif %}>Manipur</option>
+                        <option value="meghalaya" {% if address.state == 'meghalaya' %}selected{% endif %}>Meghalaya</option>
+                        <option value="mizoram" {% if address.state == 'mizoram' %}selected{% endif %}>Mizoram</option>
+                        <option value="nagaland" {% if address.state == 'nagaland' %}selected{% endif %}>Nagaland</option>
+                        <option value="odisha" {% if address.state == 'odisha' %}selected{% endif %}>Odisha</option>
+                        <option value="punjab" {% if address.state == 'punjab' %}selected{% endif %}>Punjab</option>
+                        <option value="rajasthan" {% if address.state == 'rajasthan' %}selected{% endif %}>Rajasthan</option>
+                        <option value="sikkim" {% if address.state == 'sikkim' %}selected{% endif %}>Sikkim</option>
+                        <option value="tamil_nadu" {% if address.state == 'tamil_nadu' %}selected{% endif %}>Tamil Nadu</option>
+                        <option value="telangana" {% if address.state == 'telangana' %}selected{% endif %}>Telangana</option>
+                        <option value="tripura" {% if address.state == 'tripura' %}selected{% endif %}>Tripura</option>
+                        <option value="uttar_pradesh" {% if address.state == 'uttar_pradesh' %}selected{% endif %}>Uttar Pradesh</option>
+                        <option value="uttarakhand" {% if address.state == 'uttarakhand' %}selected{% endif %}>Uttarakhand</option>
+                        <option value="west_bengal" {% if address.state == 'west_bengal' %}selected{% endif %}>West Bengal</option>
+                    </select>
+                </div>
+                
+
+
+
+
+
+                
+                <div class="col-12 mt-3 mb-3">
+                    <label for="postcode" >Pincode <span>*</span></label>
+                    <input type="text" name="pincode" class="form-control" id="postcode" value="{{address.pincode}}">
+                </div>
+                
+
+
+
+                
+                <div class="col-12 mb-3">
+                    <label for="city">Town/City <span>*</span></label>
+                    <input type="text" class="form-control" name="city" id="city" value="{{address.city}}">
+                </div>
+                
+                
+                <div class="col-12 mb-4">
+                    <label for="email_address">Email Address <span>*</span></label>
+                    <input type="email" name="email" class="form-control" id="email_address" value="{{address.email}}">
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="phone_number">Phone No <span>*</span></label>
+                    <input type="number" class="form-control" name="phone" id="phone_number" min="0" value="{{address.phone_no}}">
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="street_address">Address <span>*</span></label>
+                    <input type="text" class="form-control h-100 mb-3" name="address" id="street_address" value="{{address.address}}">
+                    
+                </div>
+                
+                
+                <div class="col-12 mt-3 ">
+                    <label for="city">Landmark<span> (optional)</span></label>
+                    <input type="text" class="form-control" name="landmark" id="city" value="{{address.landmark}}">
+                </div>
+                
+            </div>
+            <input type="submit" class="btn essence-btn mt-3 mb-3"> 
+        </form>
+    </div>
+</div>
+{% endblock %}

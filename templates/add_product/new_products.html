@@ -2,126 +2,108 @@
 
 {% block base %}
 <style>
-    /* Basic styling for the form container */
-    #variantForm {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+    /* Additional custom styles can go here if needed */
+    .form-container {
         background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 20px;
     }
 
-    /* Styling for form elements */
-    #variantForm label {
-        display: block;
-        margin-bottom: 8px;
+    .form-container h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    .form-container label {
         font-weight: bold;
     }
 
-    #variantForm select,
-    #variantForm input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    #variantForm input[type="file"] {
-        padding: 0;
-    }
-
-    /* Styling for the submit button */
-    #submit-button {
-        width: 100%;
-        padding: 10px;
-        border: none;
-        border-radius: 4px;
-        background-color: #007bff;
-        color: #fff;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    #submit-button:hover {
-        background-color: #0056b3;
+    .form-container select,
+    .form-container input,
+    .form-container textarea {
+        margin-bottom: 15px;
     }
 </style>
-<div class="container-fluid">
-    <h4 class="page-title">Product Form</h4>
-</div>
 
-<div class="col-md-8 offset-md-2">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12 form-container">
+            <h1 class="text-center">Add New Product</h1>
 
-    <div class="card-header">
-        <div class="container">
-            <h1>Add New Product</h1>
+            {% include 'alerts/alert.html' %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" name="description" id="description" placeholder="Enter a description..." rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="camera">Camera:</label>
+                    <input type="text" class="form-control" name="camera" id="camera" placeholder="Camera specifications" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="display_type">Display Type:</label>
+                    <input type="text" class="form-control" name="display_type" id="display_type" placeholder="Display type" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="display_size">Display Size:</label>
+                    <input type="text" class="form-control" name="display_size" id="display_size" placeholder="Display size" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="processor">Processor:</label>
+                    <input type="text" class="form-control" name="processor" id="processor" placeholder="Processor" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="battery">Battery:</label>
+                    <input type="text" class="form-control" name="battery" id="battery" placeholder="Battery specifications" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="os">Operating System:</label>
+                    <input type="text" class="form-control" name="os" id="os" placeholder="Operating System" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="network_type">Network Type:</label>
+                    <input type="text" class="form-control" name="network_type" id="network_type" placeholder="Network Type" required>
+                </div>
+
+                <div class="form-group ">
+                    <label for="brand">Brand:</label>
+                    <select class="form-control" name="brand" id="brand" required>
+                        <option value="">Select Brand</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group ">
+                    <label for="categories">Categories:</label>
+                    <select class="form-control" name="categories[]" id="categories" multiple required>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Add Product</button>
+            </form>
         </div>
     </div>
-     {% include 'alerts/alert.html' %}
-    <div class="card-body">
-        <form id="variantForm" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <!-- Product Name Field -->
-            <label for="name">Name:</label>
-            <input type="text" name="name" id="name" placeholder="Name" required>
-
-            <!-- Description Field -->
-            <label for="description">Description:</label>
-            <textarea name="description" id="description" rows="4" cols="50" placeholder="Enter a description..."
-                required></textarea>
-
-            <!-- Camera Field -->
-            <label for="camera">Camera:</label>
-            <input type="text" name="camera" id="camera" placeholder="Camera specifications" required>
-
-            <!-- Display Type Field -->
-            <label for="display_type">Display Type:</label>
-            <input type="text" name="display_type" id="display_type" placeholder="Display type" required>
-
-            <!-- Display Size Field -->
-            <label for="display_size">Display Size:</label>
-            <input type="text" name="display_size" id="display_size" placeholder="Display size" required>
-
-            <!-- Processor Field -->
-            <label for="processor">Processor:</label>
-            <input type="text" name="processor" id="processor" placeholder="Processor" required>
-
-            <!-- Battery Field -->
-            <label for="battery">Battery:</label>
-            <input type="text" name="battery" id="battery" placeholder="Battery specifications" required>
-
-            <!-- OS Field -->
-            <label for="os">Operating System:</label>
-            <input type="text" name="os" id="os" placeholder="Operating System" required>
-
-            <!-- Network Type Field -->
-            <label for="network_type">Network Type:</label>
-            <input type="text" name="network_type" id="network_type" placeholder="Network Type" required>
-
-            <!-- Brand Field -->
-            <label for="ram">Brand:</label>
-            <select name="brand" id="brand">
-                <option value="">Select Brand</option>
-                {% for brand in brands %}
-                <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
-                {% endfor %}
-            </select>
-            <label for="categories">Select Categories:</label>
-            <select name="categories[]" id="categories" multiple>
-                {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                {% endfor %}
-            </select>
-
-            <button type="submit" id="submit-button">Add Product</button>
-        </form>
-    </div>
 </div>
-
-</div>
-
-
 {% endblock %}

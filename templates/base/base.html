@@ -1,349 +1,385 @@
 
-
 {% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Components - Ready Bootstrap Dashboard</title>
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="{% static 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i'%}">
-	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
-	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
-<!-- For Bootstrap 3 -->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- For Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>Essence - Fashion Ecommerce Template</title>
 
+    <!-- Favicon  -->
+    <link rel="icon" href="img/core-img/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 
-	<script src="{% static 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' %}"></script>
-    <script src="{% static 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' %}"></script>
-	<style>
-    body {
-        font-family: 'Nunito', sans-serif;
-        background-color: #f8f9fa;
-        color: #333;
-        margin: 0;
-    }
+    <style>
+        .profile-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px;
+            height: 100%;
+            width: 22vw
+        }
 
-    .card {
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        background-color: #ffffff;
-        padding: 15px;
-		width: 100%;
-    }
+        .profile-sidebar {
+            flex: 1;
+            width:22vw
+            max-width: 250px;
+            background-color: #f7f7f7;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .card h5 {
-        font-weight: 600;
-        margin-bottom: 15px;
-        font-size: 16px;
-    }
+        .profile-sidebar img {
+            width: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
 
-    .table-responsive {
-        border-radius: 10px;
-        overflow: hidden;
-        margin-top: 20px;
-    }
+        .profile-sidebar h2 {
+            font-size: 18px;
+            margin: 0;
+        }
 
-    .table {
-        border-collapse: separate;
-        border-spacing: 0 8px;
-        width: 100%;
-    }
+        .profile-menu {
+            margin-top: 30px;
+        }
 
-    .table thead th {
-        border-bottom: none;
-        background-color: #f8f9fa;
-        color: #495057;
-        font-weight: 600;
-        font-size: 12px;
-        padding: 12px; /* Increased padding for better spacing */
-        text-align: left;
+        .profile-menu a {
+            display: block;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+        }
 
-    }
+        .profile-content {
+            flex: 3;
+            background-color: transparent;
+            
+            margin-left: 20px;
+        }
 
-    .table tbody tr {
-        background-color: #fff;
-        border-radius: 6px;
-        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.05);
-    }
+        .profile-content h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
 
-    .table tbody tr td {
-        padding: 12px; /* Increased padding for better spacing */
-        vertical-align: middle;
-        font-size: 12px;
-        border-top: none;
-    }
+        .user-form {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+        }
 
-    .table tbody tr td:first-child {
-        border-top-left-radius: 6px;
-        border-bottom-left-radius: 6px;
-    }
+        .input-group {
+            margin-bottom: 15px;
+            width: 50%;
+        }
 
-    .table tbody tr td:last-child {
-        border-top-right-radius: 6px;
-        border-bottom-right-radius: 6px;
-        text-align: right;
-    }
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
-    .badge {
-        font-size: 13px;
-        padding: 10px;
-        border-radius: 6px;
-    }
+        .input-group input[type="text"],
+        .input-group input[type="email"],
+        .input-group input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-    .badge-success {
-        background-color: #28a745;
-        color: #fff;
-    }
+        .gender-options {
+            display: flex;
+            align-items: center;
+        }
 
-    .badge-danger {
-        background-color: #dc3545;
-        color: #fff;
-    }
+        .gender-options label {
+            margin-right: 15px;
+        }
 
-    .search-bar {
-        float: right;
-        position: relative;
-        margin-bottom: 15px;
-    }
+        .edit-btn {
+            background-color: #0066ff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 15vw;
+            
+        }
 
-    .search-bar input {
-        padding: 8px;
-        border-radius: 25px;
-        border: 1px solid #ddd;
-        padding-left: 30px;
-        font-size: 12px;
-    }
+        .edit-btn:hover {
+            background-color: #0052cc;
+        }
 
-    .search-bar i {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #aaa;
-        font-size: 14px;
-    }
+        @media (max-width: 768px) {
+            .profile-container {
+                flex-direction: column;
+            }
 
-    .pagination {
-        justify-content: flex-end;
-        font-size: 12px;
-    }
+            .profile-sidebar,
+            .profile-content {
+                margin-left: 0;
+                max-width: 100%;
+                    
+            }
+        }
 
-    .image-container {
-        width: 60px;
-        height: 60px;
-        border-radius: 6px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .image-container img {
-        max-width: 100%;
-        max-height: 100%;
-    }
-
-    .btn-status {
-        padding: 10px;
-        border-radius: 6px;
-        font-size: 13px;
-    }
-
-	
-</style>
+        
+    </style>
 
 </head>
+
 <body>
-	<div class="wrapper">
-		<div class="main-header" style="position: absolute;">
-			<div class="logo-header">
-				<a href=""class="logo">
-					{% comment %} Ready Dashboard {% endcomment %}
-				</a>
-				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
-			</div>
-			<nav class="navbar navbar-header navbar-expand-lg">
-				<div class="container-fluid">
-					
-					
+    <!-- Header -->
+    <header class="header_area">
+        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+            <!-- Classy Menu -->
+            <nav class="classy-navbar" id="essenceNav">
+                <!-- Logo -->
+                <a class="nav-brand" href="{% url 'Home:user_home' %}">SyncWise</a>
+                <!-- Navbar Toggler -->
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span>
+                        
+                    </span><span></span><span></span></span>
+                    
+                </div>
+                <!-- Menu -->
+                <div class="classy-menu">
+                    <!-- close btn -->
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                    </div>
+
+                    <div class=" d-lg-none d-md-flex container-fluid row">
+                        <div class="profile-container col-12">
+                            <!-- Sidebar -->
+                            <div class="profile-sidebar">
+                                <div class="profile-info">
+                                    <img src="{% static 'img/core-img/user.svg' %}" alt="User Avatar">
+                                    <h2>Hello<br>{{user_obj.first_name}} {{user_obj.last_name}}</h2>
+                                </div>
+                                <div class="profile-menu">
+                                    <a href="{% url 'Product:add_product' %}">All Products</a>
+                                    <a href="{% url 'Users:users' %}">Customers</a>
+                                    <a href="{% url 'Order:order_list'%}">Orders</a>
+                                    <a href="{% url 'Brands:brands_list' %}">Brands</a>
+                                    <a href="{% url 'Product:category_list' %}">Category</a>
+                                    <a href="{% url 'Accounts:logout_admin' %}">Logout</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </nav>
 
 
 
 
-					
-					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-						
-							<li class="nav-item dropdown hidden-caret">
-						
-							<ul class="dropdown-menu notif-box" aria-labelledby="navbarDropdown">
-							
-								<li>
-									<div class="notif-center">
-										
-										
-									</div>
-								</li>
-							
-							</ul>
-						</li>
-						<li class="nav-item dropdown">
-							{% comment %} <a class="container  profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="" alt="user-img" width="36" class="img-circle"><span >Hizrian</span></span> </a> {% endcomment %}
-							
-								<!-- /.dropdown-user -->
-							</li>
-						</ul>
+
+            <!-- Header Meta Data -->
+            <div class="header-meta d-flex clearfix justify-content-end">
+                <!-- Search Area -->
+                <div class="search-area">
+                    <form action="#" method="post">
+                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </form>
+                </div>
+                <!-- Favourite Area -->
+                <div class="favourite-area">
+                    <a href="#"><img src="{% static 'img/core-img/heart.svg' %}" alt=""></a>
+                </div>
+                <!-- User Login Info -->
+                <div class="user-login-info">
+                    <a href="{% url 'Users:user_profile' %}"><img src="{% static 'img/core-img/user.svg' %}" alt=""></a>
+                </div>
+                <!-- Cart Area -->
+                <div class="cart-area">
+                    <a href="#" id="essenceCartBtn"><img src="{% static 'img/core-img/bag.svg' %}" alt=""> <span>3</span></a>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcumb_area bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                         {% block header %} {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    
+    <div class="d-flex">
+        <div class="d-none d-md-flex ">
+            <div class="profile-container col-12">
+				<!-- Sidebar -->
+				<div class="profile-sidebar">
+					<div class="profile-info">
+						<img src="{% static 'img/core-img/user.svg' %}" alt="User Avatar">
+						<h2>Hello<br>{{user_obj.first_name}} {{user_obj.last_name}}</h2>
 					</div>
-				</nav>
-			</div>
-			<div class="sidebar">
-				<div class="scrollbar-inner sidebar-wrapper">
-					<div class="user">
-						<div class="photo">
-							{% comment %} <img src="assets/img/profile.jpg"> {% endcomment %}
-						</div>
-						<div class="info">
-							{% comment %} <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
-								<span>
-									Hizrian
-									<span class="user-level">Administrator</span>
-									<span class="caret"></span>
-								</span>
-							</a> {% endcomment %}
-							<div class="clearfix"></div>
-
-							<div class="collapse in" id="collapseExample" aria-expanded="true">
-								
-							</div>
-						</div>
+					<div class="profile-menu">
+						<a href="{% url 'Product:add_product' %}">All Products</a>
+						<a href="{% url 'Users:users' %}">Customers</a>
+						<a href="{% url 'Order:order_list'%}">Orders</a>
+						<a href="{% url 'Brands:brands_list' %}">Brands</a>
+						<a href="{% url 'Product:category_list' %}">Category</a>
+						<a href="{% url 'Accounts:logout_admin' %}">Logout</a>
 					</div>
-					<ul class="nav">
-						<li class="nav-item">
-							<a href="{% url 'Home:admin_home' %}">
-								<i class="la la-dashboard"></i>
-								<p>Dashboard</p>
-								<span class="badge badge-count">5</span>
-							</a>
-						</li>
-						<li class="nav-item active">
-							<a href="{% url 'Product:add_product' %}">
-								<i class="la la-table"></i>
-								<p>Products</p>
-								
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{% url 'Users:users' %}">
-								<i class="la la-keyboard-o"></i>
-								<p>Customers</p>
-								
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="tables.html">
-								<i class="la la-th"></i>
-								<p>Orders</p>
-								
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{% url 'Brands:brands_list' %}">
-								<i class="la la-bell"></i>
-								<p>Brands</p>
-								
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{% url 'Product:category_list' %}">
-								<i class="la la-bell"></i>
-								<p>Category</p>
-								
-							</a>
-						</li>
-
-						
-						<li class="nav-item">
-							<a href="typography.html">
-								<i class="la la-font"></i>
-								<p>offers</p>
-							
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="icons.html">
-								<i class="la la-fonticons"></i>
-								<p>Banners</p>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="icons.html">
-								<i class="la la-fonticons"></i>
-								<p>Coupons</p>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{% url 'Accounts:logout_admin' %}">
-								<i class="la la-fonticons"></i>
-								<p>logout</p>
-							</a>
-						</li>
-						
-					</ul>
 				</div>
-
-
-
 			</div>
 
-            {% block base %}{% endblock %}
-
-						<!-- /.Product page main content -->
 
 
-			
-			
+        </div>
+       
+
+       
+		{% block base %}{% endblock %}
+
+    </div>
 
 
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-	<script src="{% static 'assets/js/core/jquery.3.2.1.min.js '%}"></script>
-<script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js'%}"></script>
-<script src="{% static 'assets/js/core/popper.min.js'%}"></script>
-<script src="{% static 'assets/js/core/bootstrap.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/chartist/chartist.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/jquery.mapael.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/maps/world_countries.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/chart-circle/circles.min.js'%}"></script>
-<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'%}"></script>
-<script src="{% static 'assets/js/ready.min.js'%}"></script>
-<link rel="stylesheet" href="{% static 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css' %}">
-<script src="{% static 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js' %}"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Main Content with Profile Form -->
+        
+
+    <!-- Footer -->
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area d-flex mb-30">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="#"><img src="img/core-img/logo2.png" alt=""></a>
+                        </div>
+                        <!-- Footer Menu -->
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="shop.html">Shop</a></li>
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area mb-30">
+                        <ul class="footer_widget_menu">
+                            <li><a href="#">Order Status</a></li>
+                            <li><a href="#">Payment Options</a></li>
+                            <li><a href="#">Shipping and Delivery</a></li>
+                            <li><a href="#">Guides</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-end">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_heading mb-30">
+                            <h6>Subscribe</h6>
+                        </div>
+                        <div class="subscribtion_form">
+                            <form action="#" method="post">
+                                <input type="email" name="mail" class="mail" placeholder="Your email here">
+                                <button type="submit" class="submit"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_social_area">
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<div class="row mt-5">
+                <div class="col-md-12 text-center">
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>, distributed by <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="{% static 'js/jquery/jquery-2.2.4.min.js' %}"></script>
+    <!-- Popper js -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap js -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Plugins js -->
+    <script src="{% static 'js/plugins.js'%}"></script>
+    <!-- Classy Nav js -->
+    <script src="{% static 'js/classy-nav.min.js'%}"></script>
+    <!-- Active js -->
+    <script src="{% static 'js/active.js'%}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 </body>
 
-<script>
-	$( function() {
-		$( "#slider" ).slider({
-			range: "min",
-			max: 100,
-			value: 40,
-		});
-		$( "#slider-range" ).slider({
-			range: true,
-			min: 0,
-			max: 500,
-			values: [ 75, 300 ]
-		});
-	} );
-</script>
 </html>

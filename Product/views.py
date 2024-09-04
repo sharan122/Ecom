@@ -17,7 +17,7 @@ def is_staff(user):
 @never_cache
 @user_passes_test(is_staff,'Accounts:admin_login')
 def add_product(request):
-    products=Product.objects.all()
+    products=Product.objects.order_by('-id')
     # product_qty_sums = variant.objects.values('p_id').annotate(total_qty=Sum('qty')) 
     
     context={'products':products,
@@ -220,6 +220,19 @@ def add_new_varient(request, id):
         image3 = request.FILES.get('image3')
         image4 = request.FILES.get('image4')
 
+        if not qty or not qty.isdigit() or int(qty) < 0:
+            messages.error(request, 'Please enter a valid quantity.')
+            return redirect(request.path_info)
+
+        if not price or not price.replace('.', '', 1).isdigit() or float(price) < 0:
+            messages.error(request, 'Please enter a valid price.')
+            return redirect(request.path_info)
+
+        # Duplicate check
+        if variant.objects.filter(ram=ram, rom=rom, color=color).exists():
+            messages.warning(request, 'Variant already exists.')
+            return redirect(request.path_info)
+
         new_variant_instance = variant(
             ram=ram,
             rom=rom,
@@ -304,22 +317,57 @@ def edit_variant(request, id):
 
 
 #-----------------------------Explore page-----------------------------------
-@user_auth
+
 def explore(request):
+    total=variant.objects.count()
     products=variant.objects.all()
-    context={'products':products}
+    categories = Category.objects.filter(is_active=True)
+    brands = Brand.objects.filter(status=True)
+    
+    category=request.GET.get('category')
+    brand = request.GET.get('brand')
+    sort = request.GET.get('select')
+    if category:
+        products=products.filter(p_id__categories=category)
+    if brand:
+        products = products.filter(p_id__brand=brand)
+    
+    if sort == 'a-z':
+        products=products.order_by('p_id__name')
+    if sort == 'z-a':
+        products=products.order_by('-p_id__name')
+    if sort == 'new':
+        products=products.order_by('-id')
+    if sort == 'high':
+        products=products.order_by('-price')
+    if sort == 'low':
+        products=products.order_by('price')
+    
+    context={
+        
+        'products':products,
+        'categories':categories,
+        'total':total,
+        'brands':brands
+        
+        }
     return render(request, 'explore/explore.html', context)
 
-@user_auth
+
 def signle_product(request,id):
     varient=variant.objects.get(id=id)
     product=varient.p_id
     varient_list=variant.objects.filter(p_id=product)
-    context={'varients':varient,
-             'varient_list': varient_list,
-             }
+    context={
+        
+        'varients':varient,
+        'varient_list': varient_list,
+        
+    }
     return render(request,"single_product/single_product.html",context)
+#-------------------------- filters ---------------------------------------
 
+    
 
 #-------------------------------Category-------------------------------------
 @login_required(login_url='Accounts:admin_login')
@@ -350,7 +398,7 @@ def create_category(request):
             return render(request, 'category/create_category.html')
         
         # Check if the category already exists
-        if Category.objects.filter(name=name.strip()).exists():
+        if Category.objects.filter(name__iexact=name.strip()).exists():
             messages.error(request, 'Category already exists.')
             return render(request, 'category/create_category.html')
         
@@ -389,7 +437,7 @@ def edit_category(request,id):
             return render(request, 'category/edit_category.html',context)
         
         # Check if the category already exists
-        if Category.objects.filter(name=name.strip()).exists():
+        if Category.objects.filter(name__iexact=name.strip()).exists():
             messages.error(request, 'Category already exists.')
             return render(request, 'category/edit_category.html',context)
         

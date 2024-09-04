@@ -1,0 +1,59 @@
+
+{% extends "profile_base/profile_base.html" %}
+{% block header %} <h2>Your Address</h2>{% endblock %}
+{% block profile_base %}
+    
+    <div class="container my-5">
+        <h2>Your Addresses</h2>
+        <div class="row g-4">
+            <!-- Add Address Card -->
+            <div class="col-md-4">
+                <div class="card h-100 border-dashed">
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <a href="{% url 'Users:new_address'%}" class="text-center text-decoration-none">
+                            <div class="text-muted">
+                                <i class="bi bi-plus-lg" style="font-size: 2rem;"></i>
+                                <p class="mt-2">Add address</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Card Example 1 -->
+            {% for address in addresses%}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{address.name}}</h5>
+                        <p class="card-text">
+                            {{address.city}}<br>
+                            {{address.address}}<br>
+                            {{address.city}}, {{address.state}} {{address.pincode}}<br>
+                            Landmark: {{address.landmark}}<br>
+                            {% comment %} India<br> {% endcomment %}
+                            Phone number: {{address.phone_no}}<br>
+                            Email : {{address.email}}
+                        </p>
+                       
+                        <div class="mt-3">
+                            <a href="{% url 'Users:edit_address' address.id %}" class="card-link">Edit</a>
+                            <a href="{% url 'Users:delete_address' address.id %}" class="card-link">Remove</a>
+                            <a href="#" class="card-link">Set as Default</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <!-- Address Card Example 2 -->
+          
+
+            <!-- Address Card Example 3 -->
+          
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+{% endblock %}

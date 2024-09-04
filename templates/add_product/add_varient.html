@@ -5,34 +5,9 @@
 <link href="https://unpkg.com/cropperjs/dist/cropper.min.css" rel="stylesheet">
 
 <style>
-    /* Basic styling for the form container */
+    /* Styling for the form container */
     #variantForm {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    }
-
-    /* Styling for form elements */
-    #variantForm label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-    }
-
-    #variantForm select,
-    #variantForm input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    #variantForm input[type="file"] {
-        padding: 0;
+        margin-top: 20px;
     }
 
     /* Styling for the submit button */
@@ -50,22 +25,32 @@
     #submit-button:hover {
         background-color: #0056b3;
     }
+
+    /* Cropper container styling */
+    .cropper-container {
+        margin-bottom: 15px;
+    }
+
+    .cropper-container img {
+        max-width: 100%;
+        display: block;
+    }
 </style>
 
-<div class="main-panel">
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Product Details</div>
-                    </div>
-                    <div class="card-body">
-                        <form id="variantForm" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
+<div class="container mt-5 mb-5 ">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Add Your Variant</h4>
+                </div>
+                <div class="card-body">
+                    <form id="variantForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
 
+                        <div class="form-group">
                             <label for="ram">RAM:</label>
-                            <select name="ram" id="ram">
+                            <select name="ram" id="ram" class="form-control">
                                 <option value="">Select RAM</option>
                                 <option value="4">4 GB</option>
                                 <option value="6">6 GB</option>
@@ -74,9 +59,11 @@
                                 <option value="16">16 GB</option>
                                 <option value="32">32 GB</option>
                             </select>
+                        </div>
 
+                        <div class="form-group">
                             <label for="rom">ROM:</label>
-                            <select name="rom" id="rom">
+                            <select name="rom" id="rom" class="form-control">
                                 <option value="">Select ROM</option>
                                 <option value="64">64 GB</option>
                                 <option value="128">128 GB</option>
@@ -84,59 +71,61 @@
                                 <option value="512">512 GB</option>
                                 <option value="1">1 TB</option>
                             </select>
+                        </div>
 
+                        <div class="form-group">
                             <label for="color">Colour:</label>
-                            <input type="text" name="color" pattern="[A-Za-z]+" id="color" placeholder="Colour">
+                            <input type="text" name="color" pattern="[A-Za-z]+" id="color" class="form-control" placeholder="Colour">
+                        </div>
 
+                        <div class="form-group">
                             <label for="qty">Quantity:</label>
-                            <input type="number" name="qty" min="0" id="qty" placeholder="Quantity">
+                            <input type="number" name="qty" min="0" id="qty" class="form-control" placeholder="Quantity">
+                        </div>
 
+                        <div class="form-group">
                             <label for="price">Price:</label>
-                            <input type="number" min="0" name="price" id="price" placeholder="Price">
+                            <input type="number" min="0" name="price" id="price" class="form-control" placeholder="Price">
+                        </div>
 
-                            <!-- Image 1 Preview and Cropping Area -->
-                            <div>
-                                <label for="image1">Image 1 (Required):</label>
-                                <input type="file" name="image1" id="image1" accept="image/*" required
-                                    onchange="previewImage(this, 'cropperContainer1')">
-                                <div id="cropperContainer1">
-                                    <img id="cropperImage1" style="max-width: 100%;">
-                                </div>
+                        <!-- Image 1 Preview and Cropping Area -->
+                        <div class="form-group cropper-container conta">
+                            <label for="image1">Primary Image (Required):</label>
+                            <input type="file" name="image1" id="image1" class="form-control-file" accept="image/*" required onchange="previewImage(this, 'cropperContainer1')">
+                            <div id="cropperContainer1">
+                                <img id="cropperImage1">
                             </div>
+                        </div>
 
-                            <!-- Image 2 Preview and Cropping Area -->
-                            <div>
-                                <label for="image2">Image 2 (Required):</label>
-                                <input type="file" name="image2" id="image2" accept="image/*" required
-                                    onchange="previewImage(this, 'cropperContainer2')">
-                                <div id="cropperContainer2">
-                                    <img id="cropperImage2" style="max-width: 100%;">
-                                </div>
+                        <!-- Image 2 Preview and Cropping Area -->
+                        <div class="form-group cropper-container">
+                            <label for="image2">Image 2 (Required):</label>
+                            <input type="file" name="image2" id="image2" class="form-control-file" accept="image/*" required onchange="previewImage(this, 'cropperContainer2')">
+                            <div id="cropperContainer2">
+                                <img id="cropperImage2">
                             </div>
+                        </div>
 
-                            <!-- Image 3 Preview and Cropping Area -->
-                            <div>
-                                <label for="image3">Image 3 (Optional):</label>
-                                <input type="file" name="image3" id="image3" accept="image/*"
-                                    onchange="previewImage(this, 'cropperContainer3')">
-                                <div id="cropperContainer3">
-                                    <img id="cropperImage3" style="max-width: 100%;">
-                                </div>
+                        <!-- Image 3 Preview and Cropping Area -->
+                        <div class="form-group cropper-container">
+                            <label for="image3">Image 3 (Optional):</label>
+                            <input type="file" name="image3" id="image3" class="form-control-file" accept="image/*" onchange="previewImage(this, 'cropperContainer3')">
+                            <div id="cropperContainer3">
+                                <img id="cropperImage3">
                             </div>
+                        </div>
 
-                            <!-- Image 4 Preview and Cropping Area -->
-                            <div>
-                                <label for="image4">Image 4 (Optional):</label>
-                                <input type="file" name="image4" id="image4" accept="image/*"
-                                    onchange="previewImage(this, 'cropperContainer4')">
-                                <div id="cropperContainer4">
-                                    <img id="cropperImage4" style="max-width: 100%;">
-                                </div>
+                        <!-- Image 4 Preview and Cropping Area -->
+                        <div class="form-group cropper-container">
+                            <label for="image4">Image 4 (Optional):</label>
+                            <input type="file" name="image4" id="image4" class="form-control-file" accept="image/*" onchange="previewImage(this, 'cropperContainer4')">
+                            <div id="cropperContainer4">
+                                <img id="cropperImage4">
                             </div>
+                        </div>
 
-                            <button type="submit" id="submit-button">Add Variant</button>
-                        </form>
-                    </div>
+                        <button type="submit" id="submit-button" class="btn btn-primary">Add Variant</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -147,7 +136,6 @@
 <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
 
 <script>
-    // Initialize cropper instances
     let croppers = {};
 
     function previewImage(input, cropperContainerId) {
@@ -158,12 +146,10 @@
                 const cropperImage = document.querySelector(`#${cropperContainerId} img`);
                 cropperImage.src = e.target.result;
 
-                // Destroy previous cropper if it exists
                 if (croppers[cropperContainerId]) {
                     croppers[cropperContainerId].destroy();
                 }
 
-                // Initialize Cropper.js for the image
                 croppers[cropperContainerId] = new Cropper(cropperImage, {
                     aspectRatio: 1 / 1,
                     viewMode: 1,
@@ -176,37 +162,25 @@
     }
 
     document.getElementById('variantForm').addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent immediate form submission
+        event.preventDefault();
 
-        // Image validation
         const image1 = document.getElementById('image1').files[0];
         const image2 = document.getElementById('image2').files[0];
-        let acceptedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
-        if (image1 && !acceptedTypes.includes(image1.type)) {
+        if (!acceptedTypes.includes(image1.type) || !acceptedTypes.includes(image2.type)) {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: "Please Upload Image",
-            });
-            return false;
-        }
-        if (image2 && !acceptedTypes.includes(image2.type)) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Please Upload Image",
+                text: "Please upload a valid image file.",
             });
             return false;
         }
 
-        // SweetAlert trigger
-        Swal.fire("Varient Added");
+        Swal.fire("Variant Added");
 
-        // Handle Cropping and Form Submission after SweetAlert
         const form = this;
         setTimeout(() => {
-            // Process cropped images
             let promises = [];
 
             for (let cropperId in croppers) {
@@ -226,15 +200,13 @@
                 }
             }
 
-            // Wait for all croppers to finish and then submit the form
             Promise.all(promises).then(() => {
-                form.submit();  // Submit the form after cropping
+                form.submit();
             });
-        }, 1500);  // Wait for SweetAlert to finish
+        }, 1500);
     });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
 {% endblock %}

@@ -2,79 +2,60 @@
 
 {% block base %}
 
-
-<div class="main-panel">
+<div class="main-panel mt-5 mb-5 mx-auto">
     <div class="content">
-        <div class="container-fluid">
-            <h4 class="page-title">Component</h4>
+        <div class="container col-12">
+          
             <div class="row">
-
-                <div class="card">
-                    <h5>User Details</h5>
-                    <div class="search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search...">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">User Details</h5>
+                       
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>User ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Join Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                        <tr>
+                                            <td>{{ user.id }}</td>
+                                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.phone_no }}</td>
+                                            <td>{{ user.date_joined }}</td>
+                                            <td>
+                                                {% if user.is_active %}
+                                                <a href="#" class="deactivate-button btn btn-danger btn-sm" data-url="{% url 'Users:block' user.id %}">Block</a>
+                                                {% else %}
+                                                <a href="#" class="activate-button btn btn-success btn-sm" data-url="{% url 'Users:block' user.id %}">Unblock</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% comment %} <nav class="mt-3">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                </ul>
+                            </nav> {% endcomment %}
+                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>User ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Join Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-
-
-
-
-                            {% for user in users%}
-                            <tbody>
-                                <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.first_name }}<span> </span>{{ user.last_name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.phone_no }}</td>
-                                    <td>{{ user.date_joined }}</td>
-
-                                    {% if user.is_active %}
-                                    <td>
-                                    <a href="#" class="deactivate-button" data-url="{% url 'Users:block' user.id %}"><span
-                                                class="badge badge-danger">Block</span></a></td>
-                                    {% else %}
-                                    <td><a class="activate-button" data-url ="{% url 'Users:block' user.id %}"><span
-                                                class="badge badge-success">Unblock</span></a></td>
-                                    {% endif %}
-
-                                    
-
-                                </tr>
-                            </tbody>
-                            {% endfor %}
-
-
-                        </table>
-
-                    </div>
-                    <div class="pagination">
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-
-
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
@@ -105,4 +86,5 @@
         });
     });
 </script>
+
 {% endblock %}

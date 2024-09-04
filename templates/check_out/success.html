@@ -1,0 +1,32 @@
+{% extends "user_base/user_base.html" %}
+{% load static %}
+
+{% block user_base %}
+    <div class="breadcumb_area breadcumb-style-two bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>Your order is on its way</h2>
+                        <h4>Thank you for shopping with us.</h4>
+                    </div>
+                    <div class="row justify-content-center mt-4 ">
+                        <div class="col-auto">
+                            <a href="{% url 'Order:user_order' %}" >
+                                <button type="button" class="btn essence-btn">Order Details</button>
+                            </a>
+                            
+                        </div>
+                        <div class="col-auto">
+                            <a href="{% url 'Order:user_order' %}" >
+                                                           <a href="{% url 'Product:explore' %}" >
+                                <button type="button" class="btn essence-btn">Shop More</button>
+                            </a>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

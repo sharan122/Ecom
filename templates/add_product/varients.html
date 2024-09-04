@@ -1,115 +1,85 @@
 {% extends "base/base.html" %}
 
 {% block base %}
-
-<div class="main-panel">
-    <div class="content">
-        <div class="container-fluid">
-
-            <div class="row">
-
-                <div class="card">
-                    <h5>Product Varients</h5>
-                    <div class="search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search...">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Product ID</th>
-                                    <th>Name</th>
-                                    <th>Image</th>
-                                    <th>Brand</th>
-                                    <th>Quantity</th>
-                                    <th>RAM</th>
-                                    <th>Storage</th>
-                                    <th>Price</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                    <th>Edit</th>
-
-                                </tr>
-                            </thead>
-
-
-
-
-                                    <tbody>
-                                        {% for product in products %}
-                                        <tr>
-                                            <td> {{ product.p_id.id }}</td>
-                                            <td><a href="{% url 'Product:varient_details' product.id %}">{{ product.p_id.name }}</a></td>
-                                            <td>
-                                                <div class="image-container">
-                                                    <img src="{{ product.image1.url }}" alt="Product Image">
-                                                </div>
-                                            </td>
-                                            <td>{{ product.p_id.brand.brand_name }}</td>
-                                            <td>{{ product.qty }}</td>
-                                            <td>{{ product.ram }}</td>
-                                            <td>{{ product.rom }}</td>
-                                            <td>{{ product.price }}</td>
-
-                                            {% if product.status %}
-                                            <td><span class="glyphicon">&#xe013;</span></td>
-                                            {% else %}
-                                            <td><span class="glyphicon">&#xe014;</span></td>
-                                            {% endif %}
-
-                                            {% if product.status %}
-                                            <td>
-                                                <a href="#" class="deactivate-button"
-                                                    data-url="{% url 'Product:block_varient' product.id %}">
-                                                    <span class="badge badge-danger">Deactivate</span>
-                                                </a>
-                                            </td>
-                                            {% else %}
-                                            <td>
-                                                <a href="#" class="activate-button"
-                                                    data-url="{% url 'Product:block_varient' product.id %}">
-                                                    <span class="badge badge-success">Activate</span>
-                                                </a>
-                                            </td>
-                                            {% endif %}
-
-                                            <td>
-                                                <a href="{% url 'Product:edit_variant' product.id%}">
-                                                    <button class="btn btn-status btn-success">Edit</button>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-
-                             
-
-
-                        </table>
-
-
+<div class="container col-lg-8 col-md-12 mt-5 mb-3">
+    <div class="row">
+        <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Image</th>
+                                <th>Brand</th>
+                                <th>Quantity</th>
+                                <th>RAM</th>
+                                <th>Storage</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>{{ product.p_id.id }}</td>
+                                <td><a href="{% url 'Product:varient_details' product.id %}"><p class="mb-0">{{ product.p_id.name }}</p></a></td>
+                                <td>
+                                    <div class="image-container">
+                                        <img src="{{ product.image1.url }}" alt="Product Image" style="width: 80px; height: auto;">
+                                    </div>
+                                </td>
+                                <td>{{ product.p_id.brand.brand_name }}</td>
+                                <td>{{ product.qty }}</td>
+                                <td>{{ product.ram }}</td>
+                                <td>{{ product.rom }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>
+                                    {% if product.status %}
+                                    <span class="glyphicon glyphicon-ok" style="color: green;"></span>
+                                    {% else %}
+                                    <span class="glyphicon glyphicon-remove" style="color: red;"></span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if product.status %}
+                                    <a href="#" class="deactivate-button" data-url="{% url 'Product:block_varient' product.id %}">
+                                        <span class="badge badge-danger">Deactivate</span>
+                                    </a>
+                                    {% else %}
+                                    <a href="#" class="activate-button" data-url="{% url 'Product:block_varient' product.id %}">
+                                        <span class="badge badge-success">Activate</span>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'Product:edit_variant' product.id %}">
+                                        <button class="btn btn-status btn-sm btn-success">Edit</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="mt-3 mb-2">
                         <a href="{% url 'Product:add_new_varient' product.id %}">
-                            <button class="btn btn-status btn-success">Add Variant</button>
+                            <button class="btn btn-status btn-sm btn-success">Add Variant</button>
                         </a>
-
                     </div>
-
-
                 </div>
-            </div>
+
         </div>
-
-
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Handle deactivation and activation buttons
     document.querySelectorAll('.deactivate-button, .activate-button').forEach(button => {
-        button.addEventListener('click', function (event) {
+        button.addEventListener('click', function(event) {
             event.preventDefault();
-
             const url = this.getAttribute('data-url');
             const action = this.classList.contains('deactivate-button') ? 'block' : 'activate';
 
@@ -130,5 +100,4 @@
         });
     });
 </script>
-
 {% endblock %}

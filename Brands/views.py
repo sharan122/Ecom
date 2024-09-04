@@ -38,7 +38,7 @@ def create_brand(request):
             return render(request, 'brand/create_brands.html')
 
         # Check if the brand name already exists
-        if Brand.objects.filter(brand_name=brand_name.strip()).exists():
+        if Brand.objects.filter(brand_name__iexact=(brand_name).strip()).exists():
             messages.error(request, 'Brand already exists.')
             return render(request, 'brand/create_brands.html')
 
@@ -75,7 +75,7 @@ def edit_brand(request,id):
             return render(request, 'brand/edit_brands.html',context)
 
         # Check if the brand name already exists
-        if Brand.objects.filter(brand_name=brand_name.strip()).exists():
+        if Brand.objects.filter(brand_name__iexact=brand_name.strip()).exists():
             messages.error(request, 'Brand already exists.')
             return render(request, 'brand/edit_brands.html',context)
         

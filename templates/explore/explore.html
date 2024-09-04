@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block user_base %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
+<form method="GET" id="filter-form">
 <div class="breadcumb_area bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
@@ -34,24 +34,21 @@
                             <div class="catagories-menu">
                                 <ul id="menu-content2" class="menu-content collapse show">
                                     <!-- Single Item -->
-                                    {% comment %} <li data-toggle="collapse" data-target="#clothing">
-                                        <a href="#">clothing</a>
+                              
+
                                         <ul class="sub-menu collapse show" id="clothing">
-                                            <li><a href="#">All</a></li>
-                                            <li><a href="#">Bodysuits</a></li>
-                                            <li><a href="#">Dresses</a></li>
-                                            <li><a href="#">Hoodies &amp; Sweats</a></li>
-                                            <li><a href="#">Jackets &amp; Coats</a></li>
-                                            <li><a href="#">Jeans</a></li>
-                                            <li><a href="#">Pants &amp; Leggings</a></li>
-                                            <li><a href="#">Rompers &amp; Jumpsuits</a></li>
-                                            <li><a href="#">Shirts &amp; Blouses</a></li>
-                                            <li><a href="#">Shirts</a></li>
-                                            <li><a href="#">Sweaters &amp; Knits</a></li>
+                                        {% for category in categories%}
+                                            <li><a href="?category={{ category.id }}" name="category">{{ category.name }}</a></li>
+                                         {% endfor %}   
                                         </ul>
+                                        <ul>
+                                        <a href=""><h6>Android</h6></a> <span><a href=""><h6>IOS</h6></a></span>
+
+                                        </ul>
+
                                     </li>
                                     <!-- Single Item -->
-                                    <li data-toggle="collapse" data-target="#shoes" class="collapsed">
+                                    <!-- <li data-toggle="collapse" data-target="#shoes" class="collapsed">
                                         <a href="#">shoes</a>
                                         <ul class="sub-menu collapse" id="shoes">
                                             <li><a href="#">All</a></li>
@@ -66,11 +63,11 @@
                                             <li><a href="#">Shirts</a></li>
                                             <li><a href="#">Sweaters &amp; Knits</a></li>
                                         </ul>
-                                    </li> {% endcomment %}
+                                    </li>  -->
                                     <!-- Single Item -->
-                                    <li data-toggle="collapse" data-target="#accessories" class="collapsed">
+                                    {% comment %} <li data-toggle="collapse" data-target="#accessories" class="collapsed">
                                         <a href="#">ADD SOON</a>
-                                        {% comment %} <ul class="sub-menu collapse" id="accessories">
+                                       <ul class="sub-menu collapse" id="accessories">
                                             <li><a href="#">All</a></li>
                                             <li><a href="#">Bodysuits</a></li>
                                             <li><a href="#">Dresses</a></li>
@@ -89,11 +86,11 @@
                         </div>
 
                         <!-- ##### Single Widget ##### -->
-                        <div class="widget price mb-50">
+                        <!-- <div class="widget price mb-50"> -->
                             <!-- Widget Title -->
-                            <h6 class="widget-title mb-30">Filter by</h6>
+                            <!-- <h6 class="widget-title mb-30">Filter by</h6> -->
                             <!-- Widget Title 2 -->
-                            <p class="widget-title2 mb-30">Price</p>
+                            <!-- <p class="widget-title2 mb-30">Price</p>
 
                             <div class="widget-desc">
                                 <div class="slider-range">
@@ -105,9 +102,9 @@
                                     <div class="range-price">Range: $49.00 - $360.00</div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <!-- ##### Single Widget ##### -->
+                        {% comment %} <!-- ##### Single Widget ##### -->
                         <div class="widget color mb-50">
                             <!-- Widget Title 2 -->
                             <p class="widget-title2 mb-30">Color</p>
@@ -125,7 +122,7 @@
                                     <li><a href="#" class="color10"></a></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
 
                         <!-- ##### Single Widget ##### -->
                         <div class="widget brands mb-50">
@@ -133,11 +130,9 @@
                             <p class="widget-title2 mb-30">Brands</p>
                             <div class="widget-desc">
                                 <ul>
-                                    <li><a href="#">Asos</a></li>
-                                    <li><a href="#">Mango</a></li>
-                                    <li><a href="#">River Island</a></li>
-                                    <li><a href="#">Topshop</a></li>
-                                    <li><a href="#">Zara</a></li>
+                                {% for brand in brands %}
+                                    <li><a href="?brand={{brand.id}}">{{brand.brand_name}}</a></li>
+                                  {% endfor %}  
                                 </ul>
                             </div>
                         </div>
@@ -151,17 +146,18 @@
                                 <div class="product-topbar d-flex align-items-center justify-content-between">
                                     <!-- Total Products -->
                                     <div class="total-products">
-                                        <p><span>186</span> products found</p>
+                                        <p><span>{{total}}</span> products found</p>
                                     </div>
                                     <!-- Sorting -->
                                     <div class="product-sorting d-flex">
                                         <p>Sort by:</p>
-                                        <form action="#" method="get">
-                                            <select name="select" id="sortByselect">
-                                                <option value="value">Highest Rated</option>
-                                                <option value="value">Newest</option>
-                                                <option value="value">Price: $$ - $</option>
-                                                <option value="value">Price: $ - $$</option>
+                                     
+                                            <select name="select" id="sortByselect" onchange="this.form.submit()">
+                                                <option value="new">Newest</option>
+                                                <option value="high">Highest To Low</option>
+                                                <option value="low">Low To High</option>
+                                                <option value="a-z">A-Z</option>
+                                                <option value="z-a">Z-A</option>
                                             </select>
                                             <input type="submit" class="d-none" value="">
                                         </form>
@@ -169,7 +165,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        {% if not products %}
+                                <h3>Currently no products available</h3>
+                        {% endif %}
                         <div class="row">
                         {% for product in products%}
                             <!-- Single Product -->
@@ -211,14 +209,18 @@
                                             <!-- Add to Cart -->
                                             {% if product.qty > 0 and product.status == True%}
                                             <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
+                                                <button type="button" class="addToCartButton btn essence-btn" data-variant-id="{{ product.id }}">Add To Cart</button>
                                             </div>
                                             {% endif %}
                                         </div>
                                         {% endif %}
+                                        {% if product.qty < 5  and product.qty > 0 %}
+                                        <Span style="color: rgb(255, 0, 0);">Only {{product.qty}} left</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
+                            
 
                          {% endfor %}
 
@@ -240,6 +242,74 @@
             </div>
         </div>
     </section>
+</form>
 
+<script>
+document.querySelectorAll('.addToCartButton').forEach(button => {
+    button.addEventListener('click', function() {
+        const variantId = this.getAttribute('data-variant-id');
 
+        fetch('{% url "Cart:add_to_cart" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken') // Add CSRF token
+            },
+            body: new URLSearchParams({
+                'variant_id': variantId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                position: "center",
+                icon: "success",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+            
+                });
+               
+            
+                  // Display success message
+            } else {
+                
+                Swal.fire({
+                position: "center",
+                icon: "info",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+            });
+             if (data.redirect) {
+                    window.location.href = data.redirect; // Redirect to login if unauthenticated
+                }
+           
+            }
+        
+        })
+
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+
+// Function to get CSRF token from the cookies
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
     {% endblock %}

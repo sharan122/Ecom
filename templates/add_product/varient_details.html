@@ -3,163 +3,193 @@
 {% block base %}
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        background-color: #f4f4f4;
-    }
     .main-panel {
         max-width: 1200px;
         margin: 0 auto;
+        padding: 20px;
     }
-    .card h5 {
-        color: #333;
-        font-size: 24px;
-        margin-bottom: 20px;
+
+    .hero-section {
+        background: linear-gradient(135deg, #f9fafb, #696262);
+        color: white;
+        padding: 50px;
+        border-radius: 10px;
         text-align: center;
+        margin-bottom: 30px;
     }
-    .product-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: #fff;
+
+    .hero-section h1 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .hero-section img {
+        max-width: 250px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .details-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: white;
+    }
+
+    .details-card h5 {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .details-card p {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .variant-section {
+        margin-top: 40px;
+    }
+
+    .variant-card {
         border: 1px solid #ddd;
         border-radius: 10px;
         padding: 20px;
-        margin-bottom: 40px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s;
-    }
-    .product-card:hover {
-        transform: translateY(-10px);
-    }
-    .product-card h2 {
-        color: #333;
-        margin-bottom: 15px;
-        font-size: 25px;
-        text-align: center;
-        font-weight: 700;
-
-    }
-    .product-details, .variant-details {
-        width: 100%;
-        text-align: left;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
-        
-    }
-    .variant-details {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .variant-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        margin-top: 20px;
-        width: 100%;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
+    .variant-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
     .variant-card img {
         max-width: 150px;
         height: auto;
-        border-radius: 5px;
-        margin-bottom: 10px;
+        border-radius: 10px;
+        margin-bottom: 20px;
     }
-    .variant-card h2 {
-        color: #555;
-        font-size: 20px;
+
+    .variant-card h6 {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
         margin-bottom: 15px;
-        text-align: center;
+        text-transform: uppercase;
     }
-    @media (max-width: 768px) {
-        .product-card {
-            padding: 15px;
-        }
-        .product-card h2 {
-            font-size: 18px;
-        }
-        .product-details p, .variant-details p {
-            font-size: 14px;
-        }
-        .variant-card img {
-            max-width: 120px;
-        }
+
+    .variant-details p {
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #555;
     }
-    @media (max-width: 480px) {
-        .product-card {
-            padding: 10px;
-        }
-        .product-card h2 {
-            font-size: 16px;
-        }
-        .product-details p, .variant-details p {
-            font-size: 12px;
-        }
-        .variant-card img {
-            max-width: 100px;
-        }
+
+    .variant-details p strong {
+        color: #333;
+    }
+
+    .variant-details .icon {
+        font-size: 20px;
+        margin-right: 8px;
+        color: #1e90ff;
+    }
+
+    .btn-primary-custom {
+        background-color: #1e90ff;
+        border-color: #1e90ff;
+        color: white;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #0b61a4;
+        transform: translateY(-2px);
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .col-md-6 {
+        flex: 1;
+        max-width: 400px;
+        min-width: 300px;
+
+    .btn-primary-custom {
+        background-color: #1e90ff;
+        border-color: #1e90ff;
+        color: white;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #0b61a4;
+        transform: translateY(-2px);
     }
 </style>
 
 <div class="main-panel">
     <div class="content">
         <div class="container-fluid">
+            {% for variant in varients %}
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1>{{ variant.p_id.name }} - {{ variant.ram }} GB RAM, {{ variant.rom }} GB Storage</h1>
+                <img src="{{ variant.image1.url }}" alt="Product Image">
+            </div>
 
-            <div class="row">
-               
-                    <div class="container"><h2>Product Variants</h2></div>
-                    <div class="table-responsive">
-                        <div class="product">
-                            {% for variant in varients %}
-                            <div class="product-card">
-                                <h2>{{ variant.p_id.name }} {{ variant.ram }} RAM {{ variant.rom }} Storage</h2>
-                                <div class="product-details">
-                                    <p><strong>Description:</strong> {{ variant.p_id.description }}</p>
-                                    <p><strong>Camera:</strong> {{ variant.p_id.camera }}</p>
-                                    <p><strong>Display Type:</strong> {{ variant.p_id.display_type }}</p>
-                                    <p><strong>Display Size:</strong> {{ variant.p_id.display_size }}</p>
-                                    <p><strong>Processor:</strong> {{ variant.p_id.processor }}</p>
-                                    <p><strong>Battery:</strong> {{ variant.p_id.battery }}</p>
-                                    <p><strong>Operating System:</strong> {{ variant.p_id.os }}</p>
-                                    <p><strong>Network Type:</strong> {{ variant.p_id.network_type }}</p>
-                                    <p><strong>Brand:</strong> {{ variant.p_id.brand.brand_name }}</p>
-                                    <p><strong>Category:</strong>
-                                    
-                                    {% for cat in variant.p_id.categories.all %}
+            <!-- Product Details Card -->
+            <div class="details-card">
+                <h5>Product Details</h5>
+                <p><strong>Description:</strong> {{ variant.p_id.description }}</p>
+                <p><strong>Camera:</strong> {{ variant.p_id.camera }}</p>
+                <p><strong>Display:</strong> {{ variant.p_id.display_type }} - {{ variant.p_id.display_size }} inches</p>
+                <p><strong>Processor:</strong> {{ variant.p_id.processor }}</p>
+                <p><strong>Battery:</strong> {{ variant.p_id.battery }}</p>
+                <p><strong>Operating System:</strong> {{ variant.p_id.os }}</p>
+                <p><strong>Network Type:</strong> {{ variant.p_id.network_type }}</p>
+                <p><strong>Brand:</strong> {{ variant.p_id.brand.brand_name }}</p>
+                <p><strong>Category:</strong>
+                    {% for cat in variant.p_id.categories.all %}
+                        {{ cat.name }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </p>
+            </div>
 
-                                     {{ cat.name}},
-                                     
-                                     {% endfor %}
-                                     </p>
-                                </div>
-
-                                <div class="variant-card">
-                                    <h2>Variant</h2>
-                                    <div class="variant-details">
-                                        {% if variant.image1 %}
-                                        <img src="{{ variant.image1.url }}" alt="Variant Image">
-                                        {% endif %}
-                                    </div>
-                                        <p><strong>RAM:</strong> {{ variant.ram }} GB</p>
-                                        <p><strong>ROM:</strong> {{ variant.rom }} GB</p>
-                                        <p><strong>Color:</strong> {{ variant.color }}</p>
-                                        <p><strong>Stocks Available:</strong> {{ variant.qty }}</p>
-                                        <p><strong>Price:</strong> RS {{ variant.price }}</p>
-                                        <p><strong>Status:</strong> {{ variant.status|yesno:"Available,Not Available" }}</p>
-                                    
-                                </div>
-                              
-
+            <!-- Variant Details Section -->
+            <div class="variant-section">
+                <h5>Variant Details</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="variant-card">
+                            <h6>{{ variant.color }} Variant</h6>
+                            <img src="{{ variant.image1.url }}" alt="Variant Image">
+                            <div class="variant-details">
+                                <p><i class="fas fa-memory icon"></i><strong>RAM:</strong> {{ variant.ram }} GB</p>
+                                <p><i class="fas fa-hdd icon"></i><strong>ROM:</strong> {{ variant.rom }} GB</p>
+                                <p><i class="fas fa-palette icon"></i><strong>Color:</strong> {{ variant.color }}</p>
+                                <p><i class="fas fa-boxes icon"></i><strong>Stocks Available:</strong> {{ variant.qty }}</p>
+                                <p><i class="fas fa-tag icon"></i><strong>Price:</strong> RS {{ variant.price }}</p>
+                                <p><i class="fas fa-check-circle icon"></i><strong>Status:</strong> {{ variant.status|yesno:"Available,Not Available" }}</p>
                             </div>
-                            {% endfor %}
                         </div>
                     </div>
+                </div>
                
             </div>
+        
+            {% endfor %}
         </div>
     </div>
 </div>

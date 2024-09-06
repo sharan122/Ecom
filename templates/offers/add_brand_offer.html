@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% block header %} <h2>Add Offer</h2>{% endblock %}
+{% block base %}
+
+<style>
+    #state {
+        height: 150px; /* Set a fixed height */
+        overflow-y: scroll; /* Make it scrollable */
+    }
+</style>
+<div class="col-12 col-md-6">
+    {% include 'alerts/alert.html' %}
+
+    <div class="checkout_details_area mt-50 clearfix">
+
+        <div class="cart-page-heading mb-30">
+            <h5>New Offer</h5>
+        </div>
+
+        <form  method="POST" >
+             {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="first_name">Name </label>
+                    <input type="text" class="form-control" name="name" value="{{ offer.offer_name }}" required>
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="city">description </label>
+                    <input type="text" class="form-control" name="description" id="city" value="{{ offer.offer_details}}">
+                </div>
+                
+                <div class="col-12 mt-3 mb-3">
+                    <label for="postcode" >Amount Percentage<span>*</span></label>
+                    <input type="text" name="amount" class="form-control" id="postcode" value="{{ offer.offer_price }}">
+                </div>
+                
+            </div>
+            <input type="submit" class="btn essence-btn mt-3 mb-3"> 
+        </form>
+    </div>
+</div>
+{% endblock %}

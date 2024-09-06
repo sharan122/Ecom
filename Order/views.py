@@ -100,7 +100,7 @@ def place_order(req):
     order = Order.objects.create(
         user_id = user_id,
         address_id = address_id,
-        total_price = sum(item.product.price * item.qty for item in cart_items),
+        total_price = sum(item.price* item.qty for item in cart_items),
         payment_type = req.POST.get('payment_method'),
         status = "Order Placed"
     )
@@ -112,7 +112,7 @@ def place_order(req):
                 order_id=order,
                 product_id=product,
                 qty=item.qty,
-                total_price=product.price * item.qty,
+                total_price=(item.price * item.qty),
                 status="Order Placed"
             )
             product.qty-=item.qty

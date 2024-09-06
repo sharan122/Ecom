@@ -19,6 +19,7 @@
                                             <th scope="col">Status</th>
                                             <th scope="col">Action</th>
                                             <th scope="col">Edit</th>
+                                            <th scope="col">Offers</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -42,6 +43,9 @@
                                             </td>
                                             <td>
                                                 <a href="{% url 'Brands:edit_brand' brand.id %}" class="badge bg-warning text-dark">Edit</a>
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'Offers:brand_offer' brand.id %}" class="badge bg-warning text-dark">Add Offer</a>
                                             </td>
                                         </tr>
                                         {% endfor %}

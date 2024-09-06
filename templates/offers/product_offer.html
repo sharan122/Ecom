@@ -1,0 +1,55 @@
+{% extends "base/base.html" %}
+{% block header %} <h2>Offers</h2>{% endblock %}
+
+{% block base %}
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-regular-straight/css/uicons-regular-straight.css'>
+
+
+
+<div class="container col-8 mt-5 mb-5">
+           
+    <div class="row">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Offer ID</th>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th>offer</th>
+                            <th>Discount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in offers %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.product_id.p_id.name }} {{ product.product_id.color}}   <br>{{ product.product_id.ram}} GB/{{ product.product_id.rom}} GB</td>
+                            <td>
+
+                                <div class="image-container">
+                                    <img src="{{ product.product_id.image1.url }}" alt="Product Image" style="width: 80px; height: auto;">
+                                </div>
+                            </td>
+                            <td>
+                                {{product.offer_name}}
+                            </td>
+                            <td>
+                                {{product.offer_price}}%  Off
+                            </td>
+                            <td><a href = "{% url 'Offers:edit_offer' product.id %}"><i class="fi fi-rs-edit"></i></a></td>
+                            <td><a href = "{% url 'Offers:delete_offer' product.id %}"><span class="closeb">&#10005;</span></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3 mb-3">
+                <a class="btn btn-outline-info" href="{% url 'Product:add_product' %}">Add New offer</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

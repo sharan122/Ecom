@@ -13,6 +13,7 @@ class Cart_item(models.Model):
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
     product=models.ForeignKey(variant,on_delete=models.CASCADE)
     qty = models.PositiveIntegerField(default=1)
+    price= models.IntegerField(default=0)
     
     @property
     def total_price(self):

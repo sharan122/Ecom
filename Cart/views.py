@@ -10,23 +10,28 @@ from Users.models import Address
 from Decorators.decorators import user_auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
-
+from Offers.models import Brand_Offers,Product_Offers
 
 
 # Create your views here.
 @user_auth
 @login_required(login_url='Accounts:user_login')
 def view_cart(request):
-    
-    if not request.user.is_authenticated:
-        return redirect('Accounts:user:login')
-    
-    user, _ =Cart.objects.get_or_create(user_id=request.user)
+    user, _ = Cart.objects.get_or_create(user_id=request.user)
     cart_items = Cart_item.objects.filter(cart=user)
-    qty = Cart_item.objects.values('cart_id').annotate(total=Count('id'))
-    context={'products':cart_items,'qty':qty}
     
-    return render(request,'cart/cart.html',context)
+   
+    for item in cart_items:
+        offers = Product_Offers.objects.filter(product_id=item.product.pk).first()
+        if offers:
+            item.offer_price = item.product.price - (offers.offer_price / 100) * item.product.price
+        else:
+            item.offer_price = item.product.price  
+    qty = Cart_item.objects.values('cart_id').annotate(total=Count('id'))
+    
+    context = {'products': cart_items, 'qty': qty}
+    
+    return render(request, 'cart/cart.html', context)
 
 
 #--------------------- ADD TO CART -----------------------------------
@@ -102,45 +107,78 @@ def remove_item(request,id):
 @never_cache
 @login_required(login_url='Accounts:user_login')
 def check_out(request):
-
-    user_id=request.user
-    address=Address.objects.filter(user=user_id)
-    cart_id = get_object_or_404(Cart,user_id=user_id)
+    user_id = request.user
+    address = Address.objects.filter(user=user_id)
+    cart_id = get_object_or_404(Cart, user_id=user_id)
     cart_items = Cart_item.objects.filter(cart=cart_id)
-    if not cart_items.exists():
-                messages.warning(request,'Cart is empty')
-                return redirect('Cart:view_cart')
-    for product in cart_items:
-        for product in cart_items:
-            
-            if product.product.p_id.brand.status == False:
-                
-                messages.warning(request,f'Sorry {product.product.p_id.brand.brand_name} products are not available')
-                product.delete()
-                return redirect('Cart:view_cart')
-                
-            if product.product.status == False :
-                messages.warning(request,f'{product.product.p_id.name} not available')
-                product.delete()
-                return redirect('Cart:view_cart')
-            if product.product.qty == 0  :
-                product.delete()
-                messages.warning(request,'Out of stock!!')
-                return redirect('Cart:view_cart')
-            if product.qty > product.product.qty:
-                product.delete()
-                messages.warning(request,'Quantity not availale')
-                return redirect('Cart:view_cart')
-    items_with_totals = [
-        (item, item.product.price * item.qty)
-        for item in cart_items
-    ]
-      
-    sub_total = sum(item.product.price * item.qty for item in cart_items)
     
+    # Check if cart is empty
+    if not cart_items.exists():
+        messages.warning(request, 'Cart is empty')
+        return redirect('Cart:view_cart')
+    
+    # Iterate over cart items and check availability
+    for product in cart_items:
+        if not product.product.p_id.brand.status:
+            messages.warning(request, f'Sorry, {product.product.p_id.brand.brand_name} products are not available')
+            product.delete()
+            return redirect('Cart:view_cart')
+        if not product.product.status:
+            messages.warning(request, f'{product.product.p_id.name} is not available')
+            product.delete()
+            return redirect('Cart:view_cart')
+        if product.product.qty == 0:
+            messages.warning(request, 'Out of stock!!')
+            product.delete()
+            return redirect('Cart:view_cart')
+        if product.qty > product.product.qty:
+            messages.warning(request, 'Quantity not available')
+            product.delete()
+            return redirect('Cart:view_cart')
+    
+    items_with_totals = []
+    sub_total = 0
+
+    # Calculate totals with offers
+    for item in cart_items:
+        offers = Product_Offers.objects.filter(product_id=item.product.pk).first()
+        brand_offers = Brand_Offers.objects.filter(brand_id=item.product.p_id.brand.id).first()
+
+        product_offer_price = item.product.price
+        brand_offer_price = item.product.price
+        
+        # Apply product offer if available
+        if offers:
+            product_offer_price = item.product.price - (offers.offer_price / 100) * item.product.price
+        
+        # Apply brand offer if available
+        if brand_offers:
+            brand_offer_price = item.product.price - (brand_offers.offer_price / 100) * item.product.price
+        
+        # Choose the better offer
+        if offers and brand_offers:
+            if offers.offer_price >= brand_offers.offer_price:
+                offer_price = product_offer_price
+            else:
+                offer_price = brand_offer_price
+        elif offers:
+            offer_price = product_offer_price
+        elif brand_offers:
+            offer_price = brand_offer_price
+        else:
+            offer_price = item.product.price
+        
+        # Calculate item total
+        item_total = offer_price * item.qty
+        items_with_totals.append((item, item_total))
+        sub_total += item_total
+        item.price = offer_price
+        item.save()
+
     context = {
         'addresses': address,
-        'items_with_totals' :  items_with_totals,
-        'subtotal' : sub_total
+        'items_with_totals': items_with_totals,
+        'subtotal': sub_total
     }
-    return render(request,'check_out/check_out.html',context)
+    
+    return render(request, 'check_out/check_out.html', context)

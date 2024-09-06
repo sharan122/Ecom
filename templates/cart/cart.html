@@ -210,29 +210,29 @@
             {% else %}
                 <div class="row border-top border-bottom">
                     {% for product in products %}
-                        <div class="row main align-items-center">
-                            <div class="col-2">
-                                <img class="img-fluid" src="{{ product.product.image1.url }}" alt="Product Image">
-                            </div>
-                            <div class="col">
-                                <div class="row text-muted">{{ product.product.p_id.brand.brand_name }}</div>
-                                <div class="row">{{ product.product.p_id.name }}</div>
-                            </div>
-                            <div class="col">
-                                <button class="qty-button" data-product-id="{{ product.product_id }}" data-action="decrease">-</button>
-                                <span class="border" id="quantity-{{ product.product_id }}">{{ product.qty }}</span>
-                                <button class="qty-button" data-product-id="{{ product.product_id }}" data-action="increase">+</button>
-                            </div>
-                            <div class="col" id="total-{{ product.product_id }}" data-price="{{ product.product.price }}">
-                                ₹ {{ product.product.price }}
-                            </div>
-                            <div>
-                                <a href="{% url 'Cart:remove_item' product.id %}">
-                                    <span class="closeb">&#10005;</span>
-                                </a>
-                            </div>
+                    <div class="row main align-items-center">
+                        <div class="col-2">
+                            <img class="img-fluid" src="{{ product.product.image1.url }}" alt="Product Image">
                         </div>
-                    {% endfor %}
+                        <div class="col">
+                            <div class="row text-muted">{{ product.product.p_id.brand.brand_name }}</div>
+                            <div class="row">{{ product.product.p_id.name }}</div>
+                        </div>
+                        <div class="col">
+                            <button class="qty-button" data-product-id="{{ product.product_id }}" data-action="decrease">-</button>
+                            <span class="border" id="quantity-{{ product.product_id }}">{{ product.qty }}</span>
+                            <button class="qty-button" data-product-id="{{ product.product_id }}" data-action="increase">+</button>
+                        </div>
+                        <div class="col" id="total-{{ product.product_id }}" data-price="{{ product.offer_price }}">
+                            ₹ {{ product.offer_price }}
+                        </div>
+                        <div>
+                            <a href="{% url 'Cart:remove_item' product.id %}">
+                                <span class="closeb">&#10005;</span>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
                 </div>
             {% endif %}
             

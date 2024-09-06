@@ -1,9 +1,10 @@
 {% extends "base/base.html" %}
-
+{% block header %}<h2> Varients </h2> {% endblock %}
 {% block base %}
+
 <div class="container col-lg-8 col-md-12 mt-5 mb-3">
     <div class="row">
-        <div class="card">
+        <div class="card col-lg-12">
                 <div class="table-responsive">
                     <table class="table table-sm">
                         <thead>
@@ -19,6 +20,7 @@
                                 <th>Status</th>
                                 <th>Action</th>
                                 <th>Edit</th>
+                                <th>Offer</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,23 +48,36 @@
                                 <td>
                                     {% if product.status %}
                                     <a href="#" class="deactivate-button" data-url="{% url 'Product:block_varient' product.id %}">
-                                        <span class="badge badge-danger">Deactivate</span>
+                                        <span class="btn btn-danger btn-sm">Deactivate</span>
                                     </a>
                                     {% else %}
                                     <a href="#" class="activate-button" data-url="{% url 'Product:block_varient' product.id %}">
-                                        <span class="badge badge-success">Activate</span>
+                                        <span class="btn btn-success btn-sm">Activate</span>
                                     </a>
                                     {% endif %}
                                 </td>
                                 <td>
                                     <a href="{% url 'Product:edit_variant' product.id %}">
-                                        <button class="btn btn-status btn-sm btn-success">Edit</button>
+                                        <button class="btn  btn-sm btn-warning">Edit</button>
                                     </a>
+                                </td>
+                                <td>
+                                    {% comment %} {% for offer in p_offer %}
+                                    {% if offer.product_id == product.id %}
+                                    <p class="text-success">{{offer.offer_price}}% OFF</p>
+                                    {% else %} {% endcomment %}
+                                    <a href="{% url 'Offers:add_offer' product.id %}">
+                                        <button class="btn  btn-sm btn-primary">Add Offer</button>
+                                    </a>
+                                    {% comment %} {% endif %}
+                                    {% endfor %} {% endcomment %}
+                                    
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+             
                     <div class="mt-3 mb-2">
                         <a href="{% url 'Product:add_new_varient' product.id %}">
                             <button class="btn btn-status btn-sm btn-success">Add Variant</button>

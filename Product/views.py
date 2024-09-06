@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from .models import Product,variant,Category
 from Brands.models import Brand
-from django.db.models import Sum
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
 import re
-from Decorators.decorators import user_auth
+from Offers.models import Product_Offers,Brand_Offers
+
 
 def is_staff(user):
     return user.is_staff
@@ -199,7 +199,17 @@ def edit_product(request, id):
 def view_variant(request,id):
     product = get_object_or_404(Product, pk=id)  
     varients=variant.objects.filter(p_id=id)
-    context={'products':varients,'product': product}                 
+    
+    product_offer=None
+    for varinent_id in varients:
+        product_offer = Product_Offers.objects.filter(product_id=varinent_id.id)      
+        print('offer price',product_offer) 
+          
+    context={
+        'products':varients,
+        'product': product,
+        'p_offer':product_offer
+        }
     return render(request,"add_product/varients.html",context)
 
 
@@ -208,7 +218,11 @@ def view_variant(request,id):
 @user_passes_test(is_staff,'Accounts:admin_login')
 def add_new_varient(request, id):
     products = get_object_or_404(Product, pk=id)
-    context = {'varients': products, 'product_id': products}
+    context = {
+        'varients': products,
+        'product_id': products
+        
+        }
     if request.method == 'POST':
         ram = request.POST.get('ram')
         rom = request.POST.get('rom')
@@ -354,17 +368,57 @@ def explore(request):
     return render(request, 'explore/explore.html', context)
 
 
-def signle_product(request,id):
-    varient=variant.objects.get(id=id)
-    product=varient.p_id
-    varient_list=variant.objects.filter(p_id=product)
-    context={
+#====================================== single product details =================================
+
+def single_product(request, id):
+   
+    varient = get_object_or_404(variant, id=id)
+    product = varient.p_id
+    varient_list = variant.objects.filter(p_id=product)
+
+    try:
         
-        'varients':varient,
+        brand_offer = Brand_Offers.objects.get(brand_id=varient.p_id.brand.id)
+    except Brand_Offers.DoesNotExist:
+        brand_offer = None
+
+    try:
+        
+        offer = Product_Offers.objects.get(product_id=id)
+        pr_offer = varient.price - (offer.offer_price / 100) * varient.price
+    except Product_Offers.DoesNotExist:
+        offer = None
+        pr_offer = None
+
+    if offer and brand_offer:
+       
+        b_offer = varient.price - (brand_offer.offer_price / 100) * varient.price
+        if offer.offer_price >= brand_offer.offer_price:
+            p_offer = pr_offer
+            offer_per = offer.offer_price
+        else:
+            p_offer = b_offer
+            offer_per = brand_offer.offer_price
+    elif offer:
+       
+        p_offer = pr_offer
+        offer_per = offer.offer_price
+    elif brand_offer:
+        
+        p_offer = varient.price - (brand_offer.offer_price / 100) * varient.price
+        offer_per = brand_offer.offer_price
+    else:
+        
+        p_offer = varient.price
+        offer_per = 0
+
+    context = {
+        'varients': varient,
         'varient_list': varient_list,
-        
+        'offer': p_offer,
+        'percentage': offer_per
     }
-    return render(request,"single_product/single_product.html",context)
+    return render(request, "single_product/single_product.html", context)
 #-------------------------- filters ---------------------------------------
 
     

@@ -176,6 +176,7 @@
                                     <a href="{% url 'Order:order_list'%}">Orders</a>
                                     <a href="{% url 'Brands:brands_list' %}">Brands</a>
                                     <a href="{% url 'Product:category_list' %}">Category</a>
+                                    <a href="{% url 'Offers:option' %}">Offers</a>
                                     <a href="{% url 'Accounts:logout_admin' %}">Logout</a>
                                 </div>
                             </div>
@@ -241,12 +242,13 @@
 						<h2>Hello<br>{{user_obj.first_name}} {{user_obj.last_name}}</h2>
 					</div>
 					<div class="profile-menu">
-						<a href="{% url 'Product:add_product' %}">All Products</a>
-						<a href="{% url 'Users:users' %}">Customers</a>
-						<a href="{% url 'Order:order_list'%}">Orders</a>
-						<a href="{% url 'Brands:brands_list' %}">Brands</a>
-						<a href="{% url 'Product:category_list' %}">Category</a>
-						<a href="{% url 'Accounts:logout_admin' %}">Logout</a>
+                        <a href="{% url 'Product:add_product' %}">All Products</a>
+                        <a href="{% url 'Users:users' %}">Customers</a>
+                        <a href="{% url 'Order:order_list'%}">Orders</a>
+                        <a href="{% url 'Brands:brands_list' %}">Brands</a>
+                        <a href="{% url 'Product:category_list' %}">Category</a>
+                        <a href="{% url 'Offers:option' %}">Offers</a>
+                        <a href="{% url 'Accounts:logout_admin' %}">Logout</a>
 					</div>
 				</div>
 			</div>

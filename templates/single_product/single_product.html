@@ -68,9 +68,15 @@
         <a href="">
             <h2>{{varients.p_id.name}} {{varients.color}}</h2>
         </a>
-        <p class="product-price"><span class="old-price">$65.00</span>₹ {{varients.price}}</p>
+        <p class="product-price"><span class="old-price" id="old-price" data-value={{varients.price}} > ₹ {{varients.price}}</span>
+        {% if offer%}
+        ₹ {{offer}}
+        {% else %}
+        ₹ {{varients.price}}
+        {% endif %}
+        </p>
 
-
+          {% if offer %} <p class="text-success">{{percentage}}% off on this product</p>{% endif %}
         {% if varients.qty <= 0 %} <div class="product-badge offer-badge"
             style="background-color: #FF0000; width:105px; padding-left:1px">
             <span style="color: #FFF;">Out of Stock</span>
@@ -220,6 +226,10 @@
     </div>
 </div>
 <script>
+
+
+    
+
 document.getElementById('addToCartButton').addEventListener('click', function() {
     const variantId = this.getAttribute('data-variant-id');
     

@@ -23,12 +23,12 @@ def view_cart(request):
     cart_items = Cart_item.objects.filter(cart=user)
     
    
-    for item in cart_items:
-        offers = Product_Offers.objects.filter(product_id=item.product.pk).first()
-        if offers:
-            item.offer_price = item.product.price - (offers.offer_price / 100) * item.product.price
-        else:
-            item.offer_price = item.product.price  
+    # for item in cart_items:
+    #     offers = Product_Offers.objects.filter(product_id=item.product.pk).first()
+    #     if offers:
+    #         item.offer_price = item.product.price - (offers.offer_price / 100) * item.product.price
+    #     else:
+    #         item.offer_price = item.product.price  
     qty = Cart_item.objects.values('cart_id').annotate(total=Count('id'))
     
     context = {'products': cart_items, 'qty': qty}
@@ -51,14 +51,36 @@ def add_to_cart(request):
             'redirect': reverse('Accounts:user_login')  
         }, status=401)
     
-    product_id = get_object_or_404(variant, id=v_id)
+    variant_id = get_object_or_404(variant, id=v_id)
     
     cart_user, _ = Cart.objects.get_or_create(user_id=request.user)
     
-    if Cart_item.objects.filter(product=product_id, cart=cart_user).exists():
+    offers = Product_Offers.objects.filter(product_id=variant_id.pk)
+    brand_offers = Brand_Offers.objects.filter(brand_id=variant_id.p_id.brand.pk)
+
+    if Cart_item.objects.filter(product=variant_id, cart=cart_user).exists():
         return JsonResponse({'success': False, 'message': 'Selected item already in cart'})
-    
-    Cart_item.objects.create(product=product_id, cart=cart_user)
+
+    # Apply product offer if available
+    if offers.exists():
+        product_offer_price = variant_id.price - (offers.first().offer_price / 100) * variant_id.price
+        
+    # Apply brand offer if available
+    if brand_offers.exists():
+        brand_offer_price = variant_id.price - (brand_offers.first().offer_price / 100) * variant_id.price
+        
+    # Choose the better offer
+    if offers.exists() and brand_offers.exists():
+        offer_price = min(product_offer_price, brand_offer_price)
+    elif offers.exists():
+        offer_price = product_offer_price
+    elif brand_offers.exists():
+        offer_price = brand_offer_price
+    else:
+        offer_price = variant_id.price
+    print(offer_price)
+    Cart_item.objects.create(product=variant_id, cart=cart_user, price=offer_price)
+    print('hi')
     return JsonResponse({'success': True, 'message': 'Item added to cart'})
 
 

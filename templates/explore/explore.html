@@ -191,7 +191,7 @@
                                         {% endif %}
                                         <!-- Favourite -->
                                         <div class="product-favourite">
-                                            <a href="#" class="favme fa fa-heart"></a>
+                                            <a href="{% url 'Wishlist:add_wishlist' product.id %}" class="favme fa fa-heart"></a>
                                         </div>
                                     </div>
 
@@ -236,8 +236,8 @@
                             <li class="page-item"><a class="page-link" href="#">21</a></li>
                             <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
                         </ul>
-                         {% endcomment %}
                     </nav>
+                    {% endcomment %}
                 </div>
             </div>
         </div>
@@ -312,4 +312,59 @@ function getCookie(name) {
     return cookieValue;
 }
 </script>
+<script>
+    document.querySelectorAll('.favme').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            const url = this.getAttribute('href');
+    
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken') // Add CSRF token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'info',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+    
+    // Function to get CSRF token from the cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    </script>
+    
     {% endblock %}

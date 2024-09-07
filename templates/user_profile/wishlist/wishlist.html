@@ -1,0 +1,86 @@
+{% extends "profile_base/profile_base.html" %}
+{% block header %} <h2>Wishlist</h2>{% endblock %}
+{% block profile_base %}
+
+<div class="row m-3">
+    {% for product in products%}
+    <!-- Single Product -->
+    <div class="col-12 col-sm-6 col-lg-4 mt-5 mb-5 mx-auto">
+            <card class="card">
+            <div class="single-product-wrapper m-4">
+                <!-- Product Image -->
+                <div class="product-img">
+                    <img src={{product.product.image1.url}} alt="">
+                    <!-- Hover Thumb -->
+                    {% comment %} <img class="hover-img" src={{product.image2.url}} alt=""> {% endcomment %}
+
+                    <!-- Product Badge -->
+                    {% if product.product.qty <= 0 %}
+                    <div class="product-badge offer-badge">
+                        <span>Out of Stock</span>
+                    </div>
+                    {% elif product.product.status == False or product.product.p_id.brand.status == False %}
+                    <div class="product-badge offer-badge">
+                        <span>Unavailable</span>
+                    </div>
+                    {% endif %}
+                    <!-- Favourite -->
+                    <div class="product-favourite">
+                        <a href="{% url 'Wishlist:remove_wishlist' product.product.id %}">
+                            <span class="closeb">&#10005;</span>
+                    </div>
+
+    
+                </div>
+
+                <!-- Product Description -->
+                <div class="product-description">
+                    <span>{{product.product.p_id.brand.brand_name}}</span>
+                    <a href="{% url 'Product:signle_product' product.product.id%}">
+                        <h6>{{product.product.p_id.name}} {{product.product.color}}</h6>
+                    </a>
+                    <p class="product-price">
+                        <!-- <span class="old-price">₹ 100000</span> -->
+                        
+                        ₹ {{product.product.price}}</p>
+
+                     {% if product.product.qty > 0 %}
+                    <!-- Hover Content -->
+                    <div class="hover-content">
+                        <!-- Add to Cart -->
+                        <!-- {% if product.product.qty > 0 and product.product.status == True%}
+                        <div class="add-to-cart-btn">
+                            <button type="button" class="addToCartButton btn essence-btn" data-variant-id="{{ product.id }}">Add To Cart</button>
+                        </div>
+                        {% endif %} -->
+                    </div>
+                    {% endif %}
+                    {% if product.product.qty < 5  and product.product.qty > 0 %}
+                    <Span style="color: rgb(255, 0, 0);">Only {{product.product.qty}} left</span>
+                    {% endif %}
+                </div>
+            </div>
+        </card>
+        </div>
+        
+
+     {% endfor %}
+      
+<!-- Pagination -->
+{% comment %} <nav aria-label="navigation">
+    <ul class="pagination mt-50 mb-70">
+        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">...</a></li>
+        <li class="page-item"><a class="page-link" href="#">21</a></li>
+        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
+    </ul>
+</nav>
+{% endcomment %}
+</div>
+
+
+
+{% endblock %}

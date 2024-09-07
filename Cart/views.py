@@ -11,6 +11,8 @@ from Decorators.decorators import user_auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from Offers.models import Brand_Offers,Product_Offers
+import razorpay
+from django.conf import settings
 
 
 # Create your views here.
@@ -175,10 +177,22 @@ def check_out(request):
         item.price = offer_price
         item.save()
 
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    
+    payment_data = {
+        "amount": int(sub_total * 100),  # Amount in paise
+        "currency": "INR",
+        "payment_capture": 1
+    }
+    
+    payment = client.order.create(data=payment_data)
+
     context = {
         'addresses': address,
         'items_with_totals': items_with_totals,
-        'subtotal': sub_total
+        'subtotal': sub_total,
+        'razorpay_key_id': settings.RAZORPAY_KEY_ID,  # Ensure the key is being passed
+        'order_id': payment['id'],
+        'amount': payment_data['amount'],
     }
-    
     return render(request, 'check_out/check_out.html', context)

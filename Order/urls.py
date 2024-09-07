@@ -12,6 +12,7 @@ urlpatterns = [
     path('user_order_details/<int:id>',views.user_order_details,name='user_order_details'),
     path('cancel_order/<int:id>',views.cancel_order,name='cancel_order'),
     path('order_status/<int:id>',views.order_status,name='order_status'),
+  
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)                
 

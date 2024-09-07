@@ -118,7 +118,7 @@ def place_order(req):
             product.qty-=item.qty
             product.save()
     cart_items.delete()
-    return render(req,"check_out/success.html")      
+    return render(req,"check_out/success.html")   
 
 #============================= admin order details =========================
 @user_auth

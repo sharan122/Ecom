@@ -1,3 +1,4 @@
+
 from django.shortcuts import render,get_object_or_404,redirect
 from Accounts.models import CustomUser
 from django.contrib.auth.decorators import login_required,user_passes_test
@@ -7,6 +8,7 @@ from Product.views import is_staff
 from .models import Address
 from django.contrib import messages
 import re
+from django.http import JsonResponse
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
@@ -25,6 +27,7 @@ def block(request, id):
 #--------------------- user profile --------------------------------
 @user_auth
 @login_required(login_url='Accounts:user_login')
+@never_cache
 def user_profile(request):
     user_obj=0
     if request.user.is_authenticated and not request.user.is_staff:
@@ -39,6 +42,7 @@ def user_profile(request):
 #========================== address ================================
 @user_auth
 @login_required(login_url='Accounts:user_login')
+@never_cache
 def all_address(request):
     user=request.user
     address=Address.objects.filter(user_id=user)
@@ -171,6 +175,7 @@ def delete_address(request,id):
 #================================== edit details ===============================
 @user_auth
 @login_required(login_url='Accounts:user_login')
+@never_cache
 def edit_details(request):
     user=get_object_or_404(CustomUser,id=request.user.id)
     if request.method == 'POST':
@@ -184,3 +189,68 @@ def edit_details(request):
         
         user.save()
     return redirect('Users:user_profile')
+
+
+#================================== add new address in the checkout ==================
+
+# Patterns for name, state, and city validation
+name_pattern = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")  # Only letters and single spaces allowed
+state_pattern = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")  # Similar to name pattern
+city_pattern = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")  # Similar to name pattern
+
+def add_new_address(request):
+    if request.method == "POST":
+        user = request.user  # Assuming the user is logged in
+        name = request.POST.get('name')
+        state = request.POST.get('state')
+        pincode = request.POST.get('pincode')
+        city = request.POST.get('city')
+        email = request.POST.get('email')
+        phone_no = request.POST.get('phone_no')
+        address = request.POST.get('address')
+        landmark = request.POST.get('landmark')
+
+        # Validations
+        if not name:
+            return JsonResponse({'status': 'error', 'message': "Name is required."}, status=400)
+        elif not name_pattern.match(name):
+            return JsonResponse({'status': 'error', 'message': "Name should only contain letters and spaces, with no continuous spaces or special characters."}, status=400)
+        
+        if not state:
+            return JsonResponse({'status': 'error', 'message': "State is required."}, status=400)
+        elif not state_pattern.match(state):
+            return JsonResponse({'status': 'error', 'message': "State should only contain letters and spaces, with no continuous spaces or special characters."}, status=400)
+        
+        if not pincode or not pincode.isdigit() or len(pincode) != 6:
+            return JsonResponse({'status': 'error', 'message': "Please enter a valid 6-digit pincode."}, status=400)
+        
+        if not city:
+            return JsonResponse({'status': 'error', 'message': "City is required."}, status=400)
+        elif not city_pattern.match(city):
+            return JsonResponse({'status': 'error', 'message': "City should only contain letters and spaces, with no continuous spaces or special characters."}, status=400)
+        
+        if not email or '@' not in email:
+            return JsonResponse({'status': 'error', 'message': "Please enter a valid email address."}, status=400)
+        
+        if not phone_no or not phone_no.isdigit() or len(phone_no) != 10:
+            return JsonResponse({'status': 'error', 'message': "Please enter a valid 10-digit phone number."}, status=400)
+        
+        if not address:
+            return JsonResponse({'status': 'error', 'message': "Address is required."}, status=400)
+
+        # If all validations pass, create a new Address instance
+        Address.objects.create(
+            user=user,
+            name=name,
+            state=state,
+            pincode=pincode,
+            city=city,
+            email=email,
+            phone_no=phone_no,
+            address=address,
+            landmark=landmark
+        )
+
+        return JsonResponse({'status': 'success'})
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)

@@ -1,5 +1,7 @@
 from django.db import models
 from Brands.models import Brand
+from Accounts.models import CustomUser
+from django.utils import timezone
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -36,4 +38,11 @@ class Category(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+class Review(models.Model):
+    product_id = models.ForeignKey(variant,on_delete=models.CASCADE)
+    user_id = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    review = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    
     

@@ -1,0 +1,53 @@
+{% extends "base/base.html" %}
+{% block header %} <h2>Add New Coupon</h2>{% endblock %}
+{% block base %}
+
+<style>
+    #state {
+        height: 150px; /* Set a fixed height */
+        overflow-y: scroll; /* Make it scrollable */
+    }
+</style>
+<div class="col-12 col-md-6">
+    {% include 'alerts/alert.html' %}
+
+    <div class="checkout_details_area mt-50 clearfix">
+
+        <div class="cart-page-heading mb-30">
+            <h5>New Offer</h5>
+        </div>
+
+        <form  method="POST" >
+             {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="first_name">Description<span>(Optional)</span></label>
+                    <input type="text" class="form-control" name="description" value = "{{coupon.description}}"  >
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <label for="city">Coupon Amount <span>(In Percentage)</span></label>
+                    <input type="number" class="form-control" name="percentage" id="city" value = "{{coupon.percentage}}" required>
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="city">Maximum Purchase Amount<span>*</span></label>
+                    <input type="number" class="form-control" name="max_amount" id="city" value = "{{coupon.max_amount}}" required>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label for="city">Minimum Purchase Amount<span>*</span></label>
+                    <input type="number" class="form-control" name="min_amount" id="city" value = "{{coupon.min_amount}}" required>
+                </div>
+                
+                <div class="col-12 mt-3 mb-3">
+                    <label for="postcode" >Validity<span>*</span></label>
+                    <input type="date" name="expiry" class="form-control" id="postcode" value="{{ coupon.expiry|date:'Y-m-d' }}" required>
+
+                </div>
+                
+            </div>
+            <input type="submit" class="btn essence-btn mt-3 mb-3"> 
+        </form>
+    </div>
+</div>
+{% endblock %}

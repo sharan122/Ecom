@@ -248,10 +248,31 @@
             <div class="row">
                 <div class="col" style="padding-left:0;">ITEMS {{ qty.total }}</div>
             </div>
+            {% comment %} <form method ='POST' action= "{% url 'Cart:apply_coupon' %}">
+                {% csrf_token %}
+                                                     <div class="col-12 mt-3 mb-3">
+                                            <label for="coupon_code">Have a Coupon?</label>
+                                            <input type="text" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" class="form-control">
+                                            <input type="submit" id="apply-coupon" class="btn essence-btn mt-3 mx-5  ">
+                                        </div>
+                                    </form>
+                                       <hr> <!-- Available Coupons Section --> {% endcomment %}
+                                        {% comment %} <div class="available-coupons mt-4">
+                                            <h6>Available Coupons:</h6>
+                                            <ul>
+                                                {% for coupon in available_coupons %}
+                                                    <li>{{ coupon.code }} - {{ coupon.description }}</li>
+                                                {% empty %}
+                                                    <li>No available coupons</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div> 
+                                        <hr> {% endcomment %}
             <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
                 <div class="col">SUBTOTAL</div>
                 <div id="subtotal">₹ 0.00</div>
             </div>
+            <div>{{amount}}</div>
             <a class="btn" href ="{% url 'Cart:check_out' %}">CHECKOUT</a>
         </div>
     </div>

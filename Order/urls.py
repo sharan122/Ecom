@@ -12,6 +12,14 @@ urlpatterns = [
     path('user_order_details/<int:id>',views.user_order_details,name='user_order_details'),
     path('cancel_order/<int:id>',views.cancel_order,name='cancel_order'),
     path('order_status/<int:id>',views.order_status,name='order_status'),
+    path('request_return/<int:id>',views.request_return,name='request_return'),
+    path('payment_success/',views.payment_success,name='payment_success'),
+    path('verify_payment/',views.verify_payment,name='verify_payment'),
+    path('success/',views.success,name='success'),
+    path('retry_payment/<int:order_id>/', views.retry_payment, name='retry_payment'),
+    path('apply_coupon/',views.apply_coupon,name='apply_coupon'),
+    path('remove_coupon/',views.remove_coupon,name='remove_coupon'),
+    path('download-invoice/<int:order_item_id>/', views.generate_invoice, name='download_invoice')
   
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)                

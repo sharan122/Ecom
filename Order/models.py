@@ -22,6 +22,8 @@ class Order(models.Model):
     status=models.CharField(max_length=40)
     created_at=models.DateTimeField(auto_now_add=True)
     payment_type=models.CharField()
+    razorpay_order_id=models.CharField(default='0')
+    coupon_amount = models.IntegerField(blank=True,null=True)
     
 class Order_item(models.Model):
     order_id = models.ForeignKey(Order,on_delete=models.CASCADE)
@@ -29,6 +31,8 @@ class Order_item(models.Model):
     qty = models.IntegerField()
     total_price = models.IntegerField()
     status=models.CharField(max_length=40,default='Pending')
+    message = models.CharField(null=True,blank=True,default=" ")
+ 
     
       
     

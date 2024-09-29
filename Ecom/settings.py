@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'Order',
     'Offers',
     'Wishlist',
+    'Coupons',
+    'Wallet',
 ]
 
 SITE_ID = 3
@@ -153,7 +155,7 @@ AUTH_USER_MODEL = 'Accounts.CustomUser'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

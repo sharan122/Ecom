@@ -147,7 +147,7 @@
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="{% url 'Home:user_home' %}">SyncWise</a>
+                <a class="nav-brand" href="">SyncWise</a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span>
@@ -168,7 +168,7 @@
                             <div class="profile-sidebar">
                                 <div class="profile-info">
                                     <img src="{% static 'img/core-img/user.svg' %}" alt="User Avatar">
-                                    <h2>Hello<br>{{user_obj.first_name}} {{user_obj.last_name}}</h2>
+                                    <h2>Hello</h2>
                                 </div>
                                 <div class="profile-menu">
                                     <a href="{% url 'Product:add_product' %}">All Products</a>
@@ -177,6 +177,7 @@
                                     <a href="{% url 'Brands:brands_list' %}">Brands</a>
                                     <a href="{% url 'Product:category_list' %}">Category</a>
                                     <a href="{% url 'Offers:option' %}">Offers</a>
+                                    <a href="{% url 'Coupons:all_coupond' %}">Coupons</a>
                                     <a href="{% url 'Accounts:logout_admin' %}">Logout</a>
                                 </div>
                             </div>
@@ -201,17 +202,12 @@
                     </form>
                 </div>
                 <!-- Favourite Area -->
-                <div class="favourite-area">
-                    <a href="#"><img src="{% static 'img/core-img/heart.svg' %}" alt=""></a>
-                </div>
+          
                 <!-- User Login Info -->
                 <div class="user-login-info">
-                    <a href="{% url 'Users:user_profile' %}"><img src="{% static 'img/core-img/user.svg' %}" alt=""></a>
+                    <a href=""><img src="{% static 'img/core-img/user.svg' %}" alt=""></a>
                 </div>
-                <!-- Cart Area -->
-                <div class="cart-area">
-                    <a href="#" id="essenceCartBtn"><img src="{% static 'img/core-img/bag.svg' %}" alt=""> <span>3</span></a>
-                </div>
+               
             </div>
 
         </div>
@@ -248,6 +244,7 @@
                         <a href="{% url 'Brands:brands_list' %}">Brands</a>
                         <a href="{% url 'Product:category_list' %}">Category</a>
                         <a href="{% url 'Offers:option' %}">Offers</a>
+                        <a href="{% url 'Coupons:all_coupond' %}">Coupons</a>
                         <a href="{% url 'Accounts:logout_admin' %}">Logout</a>
 					</div>
 				</div>

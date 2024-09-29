@@ -21,6 +21,7 @@ urlpatterns = [
     path('create_category/', views.create_category, name='create_category'),
     path('edit_category/<int:id>/', views.edit_category, name='edit_category'),
     path('block_category/<int:id>/', views.block_category, name='block_category'),
+    path('review/<int:id>/', views.review, name='review'),
     
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

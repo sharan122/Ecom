@@ -4,6 +4,7 @@
 {% block profile_base %}
 <link rel="stylesheet" href="{% static 'path/to/font-awesome/css/font-awesome.min.css' %}">
 <div class="col-md-9 mt-5 mb-3 mx-auto ">
+
 {% for item in items %}
                 <div class="card mt-2">
                     <div class="card-body">
@@ -31,5 +32,6 @@
                     </div>
                 </div>
                 {% endfor %}
+                
             </div>
 {% endblock %}

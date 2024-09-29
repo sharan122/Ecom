@@ -1,9 +1,37 @@
 {% extends "base/base.html" %}
-
+{% block header %} <h2>Add New Coupon</h2> {% endblock %}
 {% block base %}
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 <div class="main-panel col-10 mx-auto mt-5 mb-5">
+    <div class="row mb-4">
+        
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sales:</h5>
+                    <h3 class="card-text"> ₹ {{total_sales}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Orders: </h5>
+                    <h3 class="card-text">{{total_order}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Discount: </h5>
+                    <h3 class="card-text">{{total_discount}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -12,7 +40,37 @@
                         <div class="card-header">
                             <h5 class="card-title">All Orders</h5>
                         </div>
+
                         <div class="card-body">
+                            <!-- Filter Form -->
+                            <form method="get" action="" class="row g-3 mb-4">
+                                <div class="col-md-3">
+                                    <label for="start_date" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="end_date" class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filter_option" class="form-label">Filter Option</label>
+                                    <select class="form-select" id="filter_option" name="filter_option">
+                                        <option value="" selected>Select Filter</option>
+                                        <option value="1_day" {% if filter_option == '1_day' %}selected{% endif %}>Last 1 Day</option>
+                                        <option value="1_week" {% if filter_option == '1_week' %}selected{% endif %}>Last 1 Week</option>
+                                        <option value="1_month" {% if filter_option == '1_month' %}selected{% endif %}>Last 1 Month</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                    <!-- Button to download PDF -->
+                                    <a href="?download=pdf&start_date={{ start_date }}&end_date={{ end_date }}&filter_option={{ filter_option }}" class="btn btn-success ms-2">Download PDF</a>
+                                </div>
+                            </form>
+                            
+                            <!-- End Filter Form -->
+
+                            <!-- Orders Table -->
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover align-middle text-center">
                                     <thead class="table-dark">
@@ -25,6 +83,7 @@
                                             <th scope="col">Price</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Action</th>
+                                            <th scope="col">Requests</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -49,15 +108,19 @@
                                                             Select Status
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ order.id }}">
-                                                            {% if order.status == "Order Cancelled !" %}
+                                                            {% if order.status == "Order Cancelled !" or order.status == "Return Accepted" %}
                                                                 <li><p class="dropdown-item">No Option Available</p></li>
                                                             {% else %}
-                                                                {% if order.status != "Delivered" %}
+                                                                {% if order.status == "Order Placed" %}
                                                                     <li><button class="dropdown-item" type="submit" name="status" value="Shipped">Shipped</button></li>
                                                                     <li><button class="dropdown-item" type="submit" name="status" value="Delivered">Delivered</button></li>
                                                                     <li><button class="dropdown-item" type="submit" name="status" value="Order Cancelled !">Cancel Order</button></li>
                                                                 {% endif %}
-                                                                {% if order.status == "Delivered" %}
+                                                                {% if order.status == "Shipped" %}
+                                                                    <li><button class="dropdown-item" type="submit" name="status" value="Delivered">Delivered</button></li>
+                                                                    <li><button class="dropdown-item" type="submit" name="status" value="Order Cancelled !">Cancel Order</button></li>
+                                                                {% endif %}
+                                                                {% if order.status == "Delivered" or order.status == "Requested For Return" %}
                                                                     <li><button class="dropdown-item" type="submit" name="status" value="Return Accepted">Approve Return</button></li>
                                                                 {% endif %}
                                                             {% endif %}
@@ -65,11 +128,17 @@
                                                     </div>
                                                 </form>
                                             </td>
+                                            <td>
+                                                <h6 style="color:red">
+                                                {{ order.message }}
+                                                </h6>
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- End Orders Table -->
                         </div>
                     </div>
                 </div>

@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from .models import Product,variant,Category
+from .models import Product,variant,Category,Review
 from Brands.models import Brand
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
 import re
 from Offers.models import Product_Offers,Brand_Offers
+from Order.models import Order_item
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from Decorators.decorators import user_auth
 
 
 def is_staff(user):
@@ -338,6 +342,11 @@ def explore(request):
     categories = Category.objects.filter(is_active=True)
     brands = Brand.objects.filter(status=True)
     
+    search = request.POST.get('search')
+    if search:
+        products = variant.objects.filter(p_id__name__icontains=search)
+    
+    
     category=request.GET.get('category')
     brand = request.GET.get('brand')
     sort = request.GET.get('select')
@@ -345,7 +354,7 @@ def explore(request):
         products=products.filter(p_id__categories=category)
     if brand:
         products = products.filter(p_id__brand=brand)
-    
+        
     if sort == 'a-z':
         products=products.order_by('p_id__name')
     if sort == 'z-a':
@@ -375,13 +384,15 @@ def single_product(request, id):
     varient = get_object_or_404(variant, id=id)
     product = varient.p_id
     varient_list = variant.objects.filter(p_id=product)
+    reviews = Review.objects.filter(product_id = id)
+    print(reviews)
 
     try:
         
         brand_offer = Brand_Offers.objects.get(brand_id=varient.p_id.brand.id)
     except Brand_Offers.DoesNotExist:
         brand_offer = None
-
+        
     try:
         
         offer = Product_Offers.objects.get(product_id=id)
@@ -415,8 +426,9 @@ def single_product(request, id):
     context = {
         'varients': varient,
         'varient_list': varient_list,
-        'offer': p_offer,
-        'percentage': offer_per
+        'offer': round(p_offer),
+        'percentage': offer_per,
+        'reviews':reviews
     }
     return render(request, "single_product/single_product.html", context)
 #-------------------------- filters ---------------------------------------
@@ -518,3 +530,20 @@ def block_category(request,id):
     cat_id.is_active = not cat_id.is_active
     cat_id.save()
     return redirect('Product:category_list')
+
+#======================= review ===========================================
+@user_auth
+@require_POST
+def review(request, id):
+    review = request.POST.get('review')
+    order_item_id = request.POST.get('order_item_id')
+    order_item = get_object_or_404(Order_item, id=order_item_id)
+    product = get_object_or_404(variant, id=id)
+    
+    Review.objects.create(
+        product_id=product,
+        user_id=request.user,
+        review=review            
+    )
+    
+    return JsonResponse({'success': True})

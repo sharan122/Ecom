@@ -32,7 +32,7 @@
                             <td>
                                 {{product.offer_price}}%  Off
                             </td>
-                            <td><a href = "{% url 'Offers:edit_offer' product.id %}"><i class="fi fi-rs-edit"></i></a></td>
+                            <td><a href = "{% url 'Offers:edit_brand_offer' product.id %}"><i class="fi fi-rs-edit"></i></a></td>
                             <td><a href = "{% url 'Offers:delete_offer' product.id %}"><span class="closeb">&#10005;</span></a></td>
                         </tr>
                         {% endfor %}
@@ -40,7 +40,7 @@
                 </table>
             </div>
             <div class="mt-3 mb-3">
-                <a class="btn btn-outline-info" href="{% url 'Product:add_product' %}">Add New offer</a>
+                <a class="btn btn-outline-info" href="{% url 'Brands:brands_list' %}">Add New offer</a>
             </div>
         </div>
     </div>

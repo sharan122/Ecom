@@ -172,9 +172,10 @@
                                 <div class="profile-menu">
                                     <a href="{% url 'Users:user_profile'%}">My Account</a>
                                     <a href="{% url 'Order:user_order' %}">My Orders</a>
-                                    <a href="#">Favourites</a>
+                                    <a href="{% url 'Wishlist:wishlist' %}">Favourites</a>
                                     <a href="{% url 'Users:all_address'%}">Saved Address</a>
                                     <a href="#">Coupons</a>
+                                    <a href="{% url 'Wallet:transactions'%}">Wallet</a>
                                     <a href="{% url 'Accounts:logout_user' %}">Logout</a>
                                 </div>
                             </div>
@@ -241,9 +242,11 @@
                     <div class="profile-menu">
                         <a href="{% url 'Users:user_profile'%}">My Account</a>
                         <a href="{% url 'Order:user_order' %}">My Orders</a>
-                        <a href="#">Favourites</a>
+                        <a href="{% url 'Wishlist:wishlist' %}">Favourites</a>
+
                         <a href="{% url 'Users:all_address'%}">Saved Address</a>
                         <a href="#">Coupons</a>
+                        <a href="{% url 'Wallet:transactions'%}">Wallet</a>
                         <a href="{% url 'Accounts:logout_user' %}">Logout</a>
                     </div>
                 </div>

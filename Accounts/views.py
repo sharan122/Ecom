@@ -11,6 +11,19 @@ from datetime import timedelta
 from django.utils.dateparse import parse_datetime
 import re
 from django.contrib.auth.decorators import login_required   
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.http import HttpResponse
+from django.urls import reverse
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.hashers import make_password
+from django.conf import settings
 
 
 # user login view
@@ -249,3 +262,48 @@ def set_password(request):
         messages.success(request, 'Your password has been successfully updated!') 
         return redirect('Accounts:set_password')
     return render(request, 'user_profile/set_password.html')
+
+
+#=========================== forgot password =========================================
+
+def password_reset_request(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            user = CustomUser.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_link = request.build_absolute_uri(
+                reverse('Accounts:password_reset_confirm', args=[uid, token])
+            )
+            context = {
+                'user': user,
+                'reset_link': reset_link,
+            }
+            subject = 'Password Reset Requested'
+            message = render_to_string('forgot_password/password_reset_email.html', context)
+            send_mail(subject, message,settings.DEFAULT_FROM_EMAIL,[email])
+            return redirect('Accounts:password_reset_done')
+        else:
+            return HttpResponse("User with this email does not exist.")
+    return render(request, 'forgot_password/password_reset_form.html')
+
+
+def password_reset_confirm(request, uidb64, token):
+    UserModel = get_user_model()
+    uid = urlsafe_base64_decode(uidb64).decode()
+    user = UserModel.objects.get(pk=uid)
+    
+    if default_token_generator.check_token(user, token):
+        if request.method == "POST":
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+            if new_password == confirm_password:
+                user.password = make_password(new_password)
+                user.save()
+                return redirect('Accounts:password_reset_complete')
+            else:
+                return HttpResponse("Passwords do not match.")
+        return render(request, 'forgot_password/password_reset_confirm.html')
+    else:
+        return HttpResponse("Invalid token.")

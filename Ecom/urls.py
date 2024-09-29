@@ -31,6 +31,8 @@ urlpatterns = [
     path('order/', include('Order.urls')),
     path('offers/', include('Offers.urls')),
     path('wishlist/', include('Wishlist.urls')),
+    path('coupon/', include('Coupons.urls')),
+    path('wallet/', include('Wallet.urls')),
 ]
 
 if settings.DEBUG:

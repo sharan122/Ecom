@@ -76,7 +76,7 @@
         {% endif %}
         </p>
 
-          {% if offer %} <p class="text-success">{{percentage}}% off on this product</p>{% endif %}
+          {% if percentage != 0  %} <p class="text-success">{{percentage}}% off on this product</p>{% endif %}
         {% if varients.qty <= 0 %} <div class="product-badge offer-badge"
             style="background-color: #FF0000; width:105px; padding-left:1px">
             <span style="color: #FFF;">Out of Stock</span>
@@ -115,11 +115,11 @@
             </div>
         </div>
 
-            {% for i in  varient_list %}
-            {% if i != varients%}
         <div style="margin-top: 50px;">
             <h2 style="font-size: 130%;">OTHER VARIENTS</h2>
         </div>
+        {% for i in  varient_list %}
+        {% if i != varients%}
         <a href="{% url 'Product:signle_product' i.id %}"> <div class="variant-mini-card mb-3">
 
             <img src="{{ i.image1.url }}" alt="Variant Image" class="mini-variant-image">
@@ -152,77 +152,23 @@
 
     
 </section>
-<div class="container review-container">
-    <h2>Add Your Review</h2>
-    <form>
-        <div class="form-group">
-            <label for="reviewText">Review</label>
-            <textarea id="reviewText" class="form-control textarea-responsive"
-                placeholder="Write your review here..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Review</button>
-    </form>
-</div>
+
 <div class="container mb-5">
     <h2 class="my-4">Recent Reviews</h2>
     <div class="row ">
+        {% for review in reviews %}
+        
+  
         <!-- Review 1 -->
         <div class="col-md-4 mb-3">
             <div class="card review-card">
                 <div class="card-body review-card-body">
-                    <h5 class="card-title review-card-title">John Doe</h5>
-                    <p class="card-text review-card-text">"This is a fantastic product! It exceeded my expectations
-                        in every way."</p>
+                    <h5 class="card-title review-card-title">{{review.user_id.first_name}} {{review.user_id.last_name}}</h5>
+                    <p class="card-text review-card-text">"{{review.review}}"</p>
                 </div>
             </div>
         </div>
-        <!-- Review 2 -->
-        <div class="col-md-4">
-            <div class="card review-card">
-                <div class="card-body review-card-body">
-                    <h5 class="card-title review-card-title">Jane Smith</h5>
-                    <p class="card-text review-card-text">"Great value for the price. I would definitely recommend
-                        it to others."</p>
-                </div>
-            </div>
-        </div>
-        <!-- Review 3 -->
-        <div class="col-md-4">
-            <div class="card review-card">
-                <div class="card-body review-card-body">
-                    <h5 class="card-title review-card-title">Emily Johnson</h5>
-                    <p class="card-text review-card-text">"The product quality is top-notch, but the delivery was a
-                        bit slow."</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card review-card">
-                <div class="card-body review-card-body">
-                    <h5 class="card-title review-card-title">Emily Johnson</h5>
-                    <p class="card-text review-card-text">"The product quality is top-notch, but the delivery was a
-                        bit slow."</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card review-card">
-                <div class="card-body review-card-body">
-                    <h5 class="card-title review-card-title">Emily Johnson</h5>
-                    <p class="card-text review-card-text">"The product quality is top-notch, but the delivery was a
-                        bit slow."</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card review-card">
-                <div class="card-body review-card-body">
-                    <h5 class="card-title review-card-title">Emily Johnson</h5>
-                    <p class="card-text review-card-text">"The product quality is top-notch, but the delivery was a
-                        bit slow."</p>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 <script>

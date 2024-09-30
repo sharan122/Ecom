@@ -4,6 +4,112 @@
 {% block user_base %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<style>
+
+    /* General Styles */
+.breadcumb_area {
+    padding: 50px 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.product-img img {
+    width: 100%;
+    height: auto;
+}
+
+.product-description {
+    text-align: center;
+    padding: 15px;
+}
+
+.product-price {
+    font-weight: bold;
+}
+
+.add-to-cart-btn button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Responsive for larger screens (desktops) */
+@media (min-width: 992px) {
+    .shop_sidebar_area {
+        position: sticky;
+        top: 20px;
+    }
+
+    .single-product-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .product-description {
+        padding: 20px 0;
+    }
+}
+
+/* Responsive for tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+    .product-description h6 {
+        font-size: 1.2rem;
+    }
+
+    .product-description span {
+        font-size: 0.9rem;
+    }
+
+    .product-description .product-price {
+        font-size: 1.1rem;
+    }
+}
+
+/* Responsive for smaller screens (mobiles) */
+@media (max-width: 767px) {
+    .shop_grid_area {
+        padding: 20px 0;
+    }
+
+    .product-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .product-sorting select {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .product-description h6 {
+        font-size: 1rem;
+    }
+
+    .product-description span {
+        font-size: 0.8rem;
+    }
+
+    .product-price {
+        font-size: 1rem;
+    }
+
+    .shop_sidebar_area {
+        display: none; /* Hide sidebar on small screens */
+    }
+
+    .single-product-wrapper {
+        margin-bottom: 30px;
+    }
+
+    .hover-content {
+        display: block; /* Ensure hover content is visible */
+    }
+}
+
+
+</style>
+
 <form method="GET" id="filter-form">
 <div class="breadcumb_area bg-img" style="background-image: url({% static 'img/bg-img/breadcumb.jpg' %});">
         <div class="container h-100">

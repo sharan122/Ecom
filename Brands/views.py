@@ -5,15 +5,23 @@ from django.views.decorators.cache import never_cache
 from django.contrib import messages
 import re
 from Product.views import is_staff
+from Offers.models import Brand_Offers
 
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache
 @user_passes_test(is_staff,'Accounts:admin_login')
 def brands_list(request):
-    brands=Brand.objects.all()
-    context={'brands':brands}
-    return render(request,'brand/brands_list.html',context)
+    brands = Brand.objects.all()
+    
+    # Add offer information directly to the brand objects
+    for brand in brands:
+        brand_offer = Brand_Offers.objects.filter(brand_id=brand.id, status=True).first()
+        brand.offer = brand_offer  # Attach the offer to the brand object
+
+    context = {'brands': brands}
+    return render(request, 'brand/brands_list.html', context)
+
 
 @login_required(login_url='Accounts:admin_login')
 @never_cache

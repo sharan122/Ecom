@@ -174,7 +174,7 @@
                             <span>₹ {{ total }}</span>
                         </li>
                         {% endfor %}
-                        <li><span>Shipping</span> {% if dlvry_charge == 0 %}<span>Shipping</span>{% else %} <span>₹ {{dlvry_charge}}</span> {% endif %}</li>
+                        <li><span>Shipping</span> {% if dlvry_charge == 0 %}<span>Free</span>{% else %} <span>₹ {{dlvry_charge}}</span> {% endif %}</li>
                     
                         {% if coupon_amount %}
                         <!-- Show coupon details and final total when a coupon is applied -->

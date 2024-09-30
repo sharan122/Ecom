@@ -78,9 +78,9 @@ def add_to_cart(request):
         offer_price = brand_offer_price
     else:
         offer_price = variant_id.price
-    print(offer_price)
+
     Cart_item.objects.create(product=variant_id, cart=cart_user, price=offer_price)
-    print('hi')
+
     return JsonResponse({'success': True, 'message': 'Item added to cart'})
 
 
@@ -234,24 +234,5 @@ def check_out(request):
 
 #================================ coupon =================
 
-# def apply_coupon(request):
-#     if request.method == "POST":
-#         code = request.POST.get('coupon_code')
-#         coupon_amount = Coupons.objects.get(coupon_code = code)
-#         cart_id= Cart.objects.filter(user_id = request.user)
-#         cart_items = Cart_item.objects.filter(cart = cart_id)
-        
-#         total_price = sum(item.price for item in cart_items)
-#         amount = total_price - (coupon_amount.percentage/100)*total_price
-        
-        
-#         print(amount)
-#         for product in cart_items:
-#             product.price -=    product.price
-#             product.save()
-#             context = {
-#                 'amount':amount 
-#             }
-#     return render(request, 'cart/cart.html', context)
         
     

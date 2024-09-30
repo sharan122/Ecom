@@ -338,7 +338,7 @@ def verify_payment(req):
 def apply_coupon(request):
     if request.method == 'POST':
         code = request.POST.get('coupon_code')
-        print(code,'=======================')
+
         
         try:
             coupon = Coupons.objects.get(coupon_code=code)
@@ -351,12 +351,12 @@ def apply_coupon(request):
         
         # Ensure the coupon is active
         if not coupon.status:
-            print('hi')
+
             return JsonResponse({'error': 'This coupon is no longer active.'}, status=400)
 
         # Ensure the coupon hasn't expired
         if coupon.expiry < timezone.now().date():
-            print('expiry')
+
             return JsonResponse({'error': 'This coupon has expired.'}, status=400)
         
         # Get the user's cart and cart items
@@ -365,7 +365,7 @@ def apply_coupon(request):
         
         # Calculate total price of the cart items
         total_price = sum(item.price * item.qty for item in cart_items)
-        print(total_price,'total=======================')
+
         
 
         if total_price < coupon.min_amount:
@@ -419,59 +419,61 @@ def remove_coupon(request):
 @user_auth
 @login_required(login_url='Accounts:user_login')
 def order_list(req):
-    # Filter logic here
+    # Base queryset
     orders = Order_item.objects.all().order_by('-id')
-    
 
     start_date = req.GET.get('start_date')
     end_date = req.GET.get('end_date')
     filter_option = req.GET.get('filter_option')
-    
-    order_count = Order_item.objects.filter(status='Delivered').count()
-    total_delivered_price = Order_item.objects.filter(status='Delivered').aggregate(Sum('total_price'))['total_price__sum']
-    total_discount = Order.objects.filter(status='Order Placed').aggregate(Sum('coupon_amount'))['coupon_amount__sum']
-   
 
-    if filter_option == "1_day":
-        start_date = datetime.date.today() - datetime.timedelta(days=1)
-    elif filter_option == "1_week":
-        start_date = datetime.date.today() - datetime.timedelta(weeks=1)
-    elif filter_option == "1_month":
-        start_date = datetime.date.today() - datetime.timedelta(days=30)
+    # Apply date filter based on filter_option
+    if filter_option:
+        if filter_option == "1_day":
+            start_date = datetime.date.today() - datetime.timedelta(days=1)
+        elif filter_option == "1_week":
+            start_date = datetime.date.today() - datetime.timedelta(weeks=1)
+        elif filter_option == "1_month":
+            start_date = datetime.date.today() - datetime.timedelta(days=30)
+        end_date = datetime.date.today()
 
-    if start_date and end_date:
-        orders = orders.filter(order_id__created_at__range=[start_date, end_date])
+    # Apply date range filter
+    if start_date:
+        orders = orders.filter(order_id__created_at__gte=start_date)
+    if end_date:
+        orders = orders.filter(order_id__created_at__lte=end_date)
+
+    # Calculate metrics based on the filtered queryset
+    order_count = orders.filter(status='Delivered').count()
+    total_delivered_price = orders.filter(status='Delivered').aggregate(Sum('total_price'))['total_price__sum'] or 0
+    total_discount = Order.objects.filter(
+        id__in=orders.values_list('order_id', flat=True),
+        status='Order Placed'
+    ).aggregate(Sum('coupon_amount'))['coupon_amount__sum'] or 0
 
     context = {
         'orders': orders,
         'start_date': start_date,
         'end_date': end_date,
         'filter_option': filter_option,
-        'total_sales' : total_delivered_price,
-        'total_order' : order_count,
-        'total_discount' : total_discount
+        'total_sales': total_delivered_price,
+        'total_order': order_count,
+        'total_discount': total_discount
     }
-
 
     if req.GET.get('download') == 'pdf':
         return generate_pdf('Order/order_pdf_template.html', context)
 
     return render(req, 'Order/order_list.html', context)
 
-
 def generate_pdf(template_src, context_dict):
     template = get_template(template_src)
     html = template.render(context_dict)
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="orders.pdf"'
-
     pisa_status = pisa.CreatePDF(html, dest=response)
-
     if pisa_status.err:
         return HttpResponse('Error occurred while generating PDF')
-
     return response
-
 
 
 #=========================== user order ===============================

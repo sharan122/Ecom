@@ -62,15 +62,22 @@
                                     </a>
                                 </td>
                                 <td>
-                                    {% comment %} {% for offer in p_offer %}
-                                    {% if offer.product_id == product.id %}
-                                    <p class="text-success">{{offer.offer_price}}% OFF</p>
-                                    {% else %} {% endcomment %}
+                                    {% if p_offer != None %}
+                                    <p class="text-success">{{p_offer.offer_price}}% OFF</p>
+                                    {% else %}
                                     <a href="{% url 'Offers:add_offer' product.id %}">
                                         <button class="btn  btn-sm btn-primary">Add Offer</button>
                                     </a>
-                                    {% comment %} {% endif %}
-                                    {% endfor %} {% endcomment %}
+                                    {% endif %}
+                                    {% comment %} {% for offer in p_offer %}
+                                    {% if offer.product_id == product.id %}
+                                    <p class="text-success">{{offer.offer_price}}% OFF</p>
+                                    {% else %} 
+                                    <a href="{% url 'Offers:add_offer' product.id %}">
+                                        <button class="btn  btn-sm btn-primary">Add Offer</button>
+                                    </a>
+                                     {% endif %}
+                                    {% endfor %}  {% endcomment %}
                                     
                                 </td>
                             </tr>

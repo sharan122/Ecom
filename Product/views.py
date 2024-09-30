@@ -206,8 +206,11 @@ def view_variant(request,id):
     
     product_offer=None
     for varinent_id in varients:
-        product_offer = Product_Offers.objects.filter(product_id=varinent_id.id)      
-        print('offer price',product_offer) 
+        try:
+            product_offer = Product_Offers.objects.get(product_id=varinent_id.id)      
+
+        except:
+             product_offer=None
           
     context={
         'products':varients,
@@ -385,7 +388,7 @@ def single_product(request, id):
     product = varient.p_id
     varient_list = variant.objects.filter(p_id=product)
     reviews = Review.objects.filter(product_id = id)
-    print(reviews)
+
 
     try:
         

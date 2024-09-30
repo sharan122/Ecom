@@ -25,12 +25,12 @@
             flex-wrap: wrap;
             margin: 20px;
             height: 100%;
-            width: 22vw
+  
         }
 
         .profile-sidebar {
             flex: 1;
-            width:22vw
+         
             max-width: 250px;
             background-color: #f7f7f7;
             padding: 20px;
@@ -40,7 +40,7 @@
         .profile-sidebar img {
             width: 50px;
             border-radius: 50%;
-            margin-right: 10px;
+            
         }
 
         .profile-sidebar h2 {
@@ -230,7 +230,7 @@
     
     <div class="d-flex">
         <div class="d-none d-md-flex ">
-            <div class="profile-container col-12">
+            <div class="profile-container col-11">
 				<!-- Sidebar -->
 				<div class="profile-sidebar">
 					<div class="profile-info">
@@ -238,6 +238,7 @@
 						<h2>Hello<br>{{user_obj.first_name}} {{user_obj.last_name}}</h2>
 					</div>
 					<div class="profile-menu">
+                        <a href="{% url 'Home:admin_home' %}">Dash Board</a>
                         <a href="{% url 'Product:add_product' %}">All Products</a>
                         <a href="{% url 'Users:users' %}">Customers</a>
                         <a href="{% url 'Order:order_list'%}">Orders</a>

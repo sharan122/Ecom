@@ -76,48 +76,7 @@ def place_order(req):
                         address=item.address,
                         landmark=item.landmark,
                     )
-        else:
-           
-            name = req.POST.get('name')
-            state = req.POST.get('state')
-            pincode = req.POST.get('pincode')
-            city = req.POST.get('city')
-            email = req.POST.get('email')
-            phone_no = req.POST.get('phone')
-            address = req.POST.get('address')
-            landmark = req.POST.get('landmark')
-            if not name or not state or not pincode or not city or not email or not phone_no or not address:
-                messages.warning(req, 'Please fill all the fields')
-                return redirect('Cart:check_out')
-            save_address = Address(
-                user=user_id,
-                name=name,
-                state=state,
-                pincode=pincode,
-                city=city,
-                email=email,
-                phone_no=phone_no,
-                address=address,
-                landmark=landmark,
-            )
-            save_address.save()
-            address_id = Shippment_address(
-                user=user_id,
-                name=name,
-                state=state,
-                pincode=pincode,
-                city=city,
-                email=email,
-                phone_no=phone_no,
-                address=address,
-                landmark=landmark,
-            )
-            address_id.save()
-
-
-
-              
-
+       
         payment_method = req.POST.get('payment_method')
 
         if payment_method == 'Razorpay':
@@ -171,21 +130,24 @@ def place_order(req):
                 total_price=total_price,
                 payment_type='COD',
                 status="Order Placed",
-                coupon_amount = coupon_value
-                
-                
+                coupon_amount = coupon_value   
             )
+            
             for item in cart_items:
                 product = variant.objects.get(id=item.product.id)
+                product.qty -= item.qty
+                item.save()
                 Order_item.objects.create(
                     order_id=order,
                     product_id=product,
                     qty=item.qty,
                     total_price=(item.price * item.qty),
-                    status="Order Placed",
-                    
+                    status="Order Placed",    
                     
                 )
+                product.qty-=item.qty
+                product.save()
+                
                 
             if coupon_amount > 0:
                 coupon_instance = Coupons.objects.get(coupon_code=req.session.get('coupon_code'))

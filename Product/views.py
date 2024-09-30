@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 from Decorators.decorators import user_auth
 
 
+
 def is_staff(user):
     return user.is_staff
 

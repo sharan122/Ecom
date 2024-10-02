@@ -30,6 +30,7 @@ def add_wishlist(request, id):
 
     return JsonResponse({'success': success, 'message': message})
 
+@login_required(login_url='Accounts:user_login')
 def remove_wishlist(request,id):
     item = get_object_or_404(Wishlist,product = id)
     item.delete()

@@ -7,9 +7,13 @@ from Offers.models import Product_Offers,Brand_Offers
 from django.contrib import messages
 # Create your views here.
 
+def is_staff(user):
+    return user.is_staff
 
 #=================== add new product offer ====================
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def add_offer(request, id):
     if request.method == 'POST':
         product = get_object_or_404(variant, id=id)
@@ -63,9 +67,15 @@ def add_offer(request, id):
     return render(request, 'offers/add_offer.html')
 
 #=========================== select offer option ===========================
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def option(request):
     return render(request,'offers/options.html') 
 #======================= product offers ====================================
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def product_offer(request):
     offers = Product_Offers.objects.all()
     context = {
@@ -75,7 +85,9 @@ def product_offer(request):
     return render(request,'offers/product_offer.html',context)
 
 #================================== edit product  offer ========================
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def edit_offer(request, id):
     offer = get_object_or_404(Product_Offers, id=id)
     
@@ -129,13 +141,18 @@ def edit_offer(request, id):
     return render(request, 'offers/add_offer.html', context)
 
 #============================== delete brand offer ===========================
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def delete_offer(request,id):
     offer = get_object_or_404(Product_Offers,id=id)
     offer.delete()
     return redirect('Offers:product_offer')
 
 #=================================== brand offer ==============================
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def brand_offer(request, id):
     if request.method == 'POST':
         brand = get_object_or_404(Brand, id=id)
@@ -189,7 +206,9 @@ def brand_offer(request, id):
 
 
 #================================ edit brand offer ================================
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def edit_brand_offer(request, id):
     offer = get_object_or_404(Brand_Offers, id=id)
 
@@ -241,7 +260,9 @@ def edit_brand_offer(request, id):
     return render(request, 'offers/add_brand_offer.html', context)
 
 #================================ all brand offers =================================
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def brand_offer_list(request):
     offers = Brand_Offers.objects.all()
     context = {

@@ -174,7 +174,7 @@
                                     <a href="{% url 'Order:user_order' %}">My Orders</a>
                                     <a href="{% url 'Wishlist:wishlist' %}">Favourites</a>
                                     <a href="{% url 'Users:all_address'%}">Saved Address</a>
-                                    <a href="#">Coupons</a>
+     
                                     <a href="{% url 'Wallet:transactions'%}">Wallet</a>
                                     <a href="{% url 'Accounts:logout_user' %}">Logout</a>
                                 </div>
@@ -208,7 +208,7 @@
                 </div>
                 <!-- Cart Area -->
                 <div class="cart-area">
-                    <a href="#" id="essenceCartBtn"><img src="{% static 'img/core-img/bag.svg' %}" alt=""> <span>3</span></a>
+                    <a href="#" id="essenceCartBtn"><img src="{% static 'img/core-img/bag.svg' %}" alt=""> <span></span></a>
                 </div>
             </div>
 
@@ -245,7 +245,7 @@
                         <a href="{% url 'Wishlist:wishlist' %}">Favourites</a>
 
                         <a href="{% url 'Users:all_address'%}">Saved Address</a>
-                        <a href="#">Coupons</a>
+
                         <a href="{% url 'Wallet:transactions'%}">Wallet</a>
                         <a href="{% url 'Accounts:logout_user' %}">Logout</a>
                     </div>

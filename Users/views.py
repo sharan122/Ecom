@@ -166,6 +166,7 @@ def edit_address(request, id):
             return redirect('Users:all_address')
 
     return render(request, 'user_profile/edit_address.html', context)
+
 @login_required(login_url='Accounts:user_login')
 def delete_address(request,id):
     address_id = get_object_or_404(Address,id = id)
@@ -198,6 +199,8 @@ name_pattern = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")  # Only letters and sin
 state_pattern = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")  # Similar to name pattern
 city_pattern = re.compile(r"^[A-Za-z]+(?: [A-Za-z]+)*$")  # Similar to name pattern
 
+@user_auth
+@login_required(login_url='Accounts:user_login')
 def add_new_address(request):
     if request.method == "POST":
         user = request.user  # Assuming the user is logged in

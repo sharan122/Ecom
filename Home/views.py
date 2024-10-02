@@ -24,6 +24,8 @@ def user_home(request):
 @login_required(login_url='Accounts:admin_login')
 @never_cache
 def admin_home(request):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('Accounts:admin_login')
     filter_option = request.GET.get('filter', 'daily')  
     today = now().date()
     

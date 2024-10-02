@@ -18,7 +18,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.http import HttpResponse
 from django.urls import reverse
-
+from django.views.decorators.cache import never_cache
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
@@ -27,7 +27,11 @@ from django.conf import settings
 
 
 # user login view
+@never_cache
 def user_login(request):
+    if request.session.session_key:
+        return redirect('Home:user_home')
+    
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -71,6 +75,7 @@ def generate_otp():
     return random.randint(100000, 999999)
 
 # User signup view
+@never_cache
 def user_signup(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name').strip()
@@ -199,6 +204,7 @@ def resend_otp(request):
 
 #admin signup view
 def admin_login(request):
+  
     if request.method == 'POST':
         username=request.POST.get('username')
         password=request.POST.get('password')

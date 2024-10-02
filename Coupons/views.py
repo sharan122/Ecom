@@ -10,15 +10,22 @@ from datetime import datetime
 from Cart.models import Cart,Cart_item
 from django.http import JsonResponse
 from datetime import date
-
+from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required,user_passes_test
 
 
 # Create your views here.
+def is_staff(user):
+    return user.is_staff
+
+
 def generate_coupon_code(length=6):
     letters_and_digits = string.ascii_uppercase + string.digits
     return ''.join(random.choices(letters_and_digits, k=length))
 
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def add_coupon(request):
     if request.method == 'POST':
         description = request.POST.get('description')
@@ -83,7 +90,9 @@ def add_coupon(request):
     return render(request, 'coupon/coupon.html')
 
 #========================= show all coupons =====================================
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def all_coupond(request):
     coupons = Coupons.objects.all()
     context = {
@@ -91,6 +100,9 @@ def all_coupond(request):
     }
     return render(request,'coupon/coupon_list.html',context)
  #================================= edit coupon ================================
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def edit_coupon(request, id):
     coupon = get_object_or_404(Coupons, id=id)
 
@@ -158,7 +170,9 @@ def edit_coupon(request, id):
     return render(request, 'coupon/coupon.html', context)
     
 #=========================== remove coupon ===================================
-
+@login_required(login_url='Accounts:admin_login')
+@never_cache
+@user_passes_test(is_staff,'Accounts:admin_login')
 def remove_coupon(request,id):
     coupon = get_object_or_404(Coupons,id = id)
     coupon.delete()

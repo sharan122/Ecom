@@ -537,6 +537,7 @@ def block_category(request,id):
 
 #======================= review ===========================================
 @user_auth
+@login_required(login_url='Accounts:user_login')
 @require_POST
 def review(request, id):
     review = request.POST.get('review')

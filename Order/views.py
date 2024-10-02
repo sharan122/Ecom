@@ -223,6 +223,8 @@ def payment_success(req):
     
     return render(req, "check_out/success.html")
 #=================================== Retry payment ========================
+@user_auth
+@login_required(login_url='Accounts:user_login')
 def retry_payment(req, order_id):
     order = get_object_or_404(Order, id=order_id, user_id=req.user, status="Payment Failed")
     
@@ -296,7 +298,8 @@ def verify_payment(req):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 #=================================== apply coupon =====================================
-
+@user_auth
+@login_required(login_url='Accounts:user_login')
 def apply_coupon(request):
     if request.method == 'POST':
         code = request.POST.get('coupon_code')
@@ -357,7 +360,8 @@ def apply_coupon(request):
     return JsonResponse({'error': 'Invalid request.'}, status=400)
      
 #============================= remove coupon ===============================
-
+@user_auth
+@login_required(login_url='Accounts:admin_login')
 def remove_coupon(request):
     if request.method == 'POST':
         # Check if the coupon details are present in the session
@@ -379,7 +383,7 @@ def remove_coupon(request):
 
 #============================= admin order details =========================
 @user_auth
-@login_required(login_url='Accounts:user_login')
+@login_required(login_url='Accounts:admin_login')
 def order_list(req):
     # Base queryset
     orders = Order_item.objects.all().order_by('-id')
@@ -439,7 +443,8 @@ def generate_pdf(template_src, context_dict):
 
 
 #=========================== user order ===============================
-
+@user_auth
+@login_required(login_url='Accounts:user_login')
 def user_order(req):
     user_id = req.user
     order_id = Order.objects.filter(user_id=user_id).order_by('-id')
@@ -453,7 +458,7 @@ def user_order(req):
 @user_auth
 @login_required(login_url='Accounts:user_login')
 def order_items(req, id):
-    items =  Order_item.objects.filter(order_id = id)
+    items =  Order_item.objects.filter(order_id = id,order_id__user_id=req.user)
     context = {
         'items' : items
     }
@@ -465,7 +470,7 @@ def order_items(req, id):
 @user_auth
 @login_required(login_url='Accounts:user_login')
 def user_order_details(req,id):
-    item = Order_item.objects.filter(id = id)
+    item = Order_item.objects.filter(id = id,order_id__user_id=req.user)
     
     items = Order_item.objects.get(id = id)
     current_item = items.id
@@ -482,7 +487,8 @@ def user_order_details(req,id):
     return render(req,'user_profile/order_details.html',context)
 
 #======================= order status =======================================
-
+@user_auth
+@login_required(login_url='Accounts:admin_login')
 def order_status(req, id):
     item = get_object_or_404(Order_item, id=id)
     order_count = Order_item.objects.filter(order_id = item.order_id.pk).count()
@@ -562,7 +568,8 @@ def cancel_order(req, id):
 
     return redirect('Order:user_order_details', id=id)
 #======================= request return ============================
-
+@user_auth
+@login_required(login_url='Accounts:user_login')
 def request_return(request,id):
     item = Order_item.objects.get(id=id)
     if item.status == 'Delivered':
